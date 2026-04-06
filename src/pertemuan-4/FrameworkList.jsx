@@ -24,8 +24,7 @@ export default function FrameworkList() {
           {item.tags.map((tag, index) => (
             <div
               key={index}
-              className="bg-red-300 mb-1 text-center hover:rotate-1 
-              hover:decoration-1 text-gray-700 px-2 py-1 text-xs rounded-full mr-2"
+              className="bg-red-300 mb-1 text hover:rotate-45 text-gray-700 px-2 py-1 text-xs rounded-full mr-2"
             >
               {tag}
             </div>
