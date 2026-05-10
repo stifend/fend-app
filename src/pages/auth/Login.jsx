@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImSpinner2 } from "react-icons/im";
 import { BsFillExclamationDiamondFill } from "react-icons/bs";
-import hotelLogo from "../../assets/Hotel.jpg";
+import AuthLayout from "../../layouts/AuthLayout";
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -25,7 +25,6 @@ export default function Login({ onLogin }) {
     setLoading(true);
     setError("");
 
-    // Simulasi delay login
     setTimeout(() => {
       if (dataForm.email === "admin" && dataForm.password === "123") {
         localStorage.setItem("token", "local-token-admin");
@@ -40,68 +39,61 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
+    <AuthLayout 
+      title="Login ke Dashboard" 
+      subtitle="Masuk untuk mengelola hotel Anda"
+    >
+      {/* Alert error */}
+      {error && (
+        <div className="auth-alert auth-alert-error">
+          <BsFillExclamationDiamondFill />
+          <span>{error}</span>
+        </div>
+      )}
 
-        {/* Logo Hotel */}
-        <div className="auth-icon">
-          <img src={hotelLogo} alt="Logo Hotel" className="auth-logo-img" />
+      {/* Alert loading */}
+      {loading && (
+        <div className="auth-alert auth-alert-info">
+          <ImSpinner2 className="auth-spin" />
+          <span>Mohon tunggu...</span>
+        </div>
+      )}
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-row">
+          <label htmlFor="email">Username</label>
+          <input
+            id="email"
+            type="text"
+            name="email"
+            placeholder="contoh: admin"
+            onChange={handleChange}
+            required
+            autoComplete="username"
+          />
         </div>
 
-        {/* Heading */}
-        <h2 className="auth-heading">Dashboard Hotel</h2>
-        <p className="auth-subheading">Masuk sebagai admin hotel</p>
+        <div className="form-row">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="contoh: 123"
+            onChange={handleChange}
+            required
+            autoComplete="current-password"
+          />
+        </div>
 
-        {/* Alert error */}
-        {error && (
-          <div className="auth-alert auth-alert-error">
-            <BsFillExclamationDiamondFill />
-            <span>{error}</span>
-          </div>
-        )}
+        <button type="submit" className="btn-auth-submit" disabled={loading}>
+          {loading ? "Loading..." : "Login"}
+        </button>
+      </form>
 
-        {/* Alert loading */}
-        {loading && (
-          <div className="auth-alert auth-alert-info">
-            <ImSpinner2 className="auth-spin" />
-            <span>Mohon tunggu...</span>
-          </div>
-        )}
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-row">
-            <label htmlFor="email">Username</label>
-            <input
-              id="email"
-              type="text"
-              name="email"
-              placeholder="contoh: admin"
-              onChange={handleChange}
-              required
-              autoComplete="username"
-            />
-          </div>
-
-          <div className="form-row">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="contoh: 123"
-              onChange={handleChange}
-              required
-              autoComplete="current-password"
-            />
-          </div>
-
-          <button type="submit" className="btn-auth-submit" disabled={loading}>
-            {loading ? "Loading..." : "Login"}
-          </button>
-        </form>
-
-        {/* Links */}
+      {/* Links */}
+      <div className="auth-links-bottom">
         <p className="auth-link-row">
           Belum punya akun?{" "}
           <a href="/register" className="auth-link-accent">Register</a>
@@ -109,9 +101,7 @@ export default function Login({ onLogin }) {
         <p className="auth-link-row">
           <a href="/forgot" className="auth-link-muted">Lupa password?</a>
         </p>
-
-        <small className="auth-copy">© 2025 Awakening Hotel Dashboard</small>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

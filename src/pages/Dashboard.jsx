@@ -1,36 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 
-const Dashboard = ({ onViewReservations }) => {
-  const reservations = [
-    { id: 'P001', name: 'Rina Amelia', reservation: 'RSV-7684', payment: 'Lunas' },
-    { id: 'P002', name: 'Andi Putra', reservation: 'RSV-7685', payment: 'Pending' },
-    { id: 'P003', name: 'Siti Rahma', reservation: 'RSV-7686', payment: 'Lunas' },
-    { id: 'P004', name: 'Budi Santoso', reservation: 'RSV-7687', payment: 'Belum Bayar' },
-  ];
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const { reservations, customers } = useData();
 
   return (
     <div className="dashboard-page">
       <section className="dashboard-top">
         <div className="dashboard-metrics">
           <article className="dashboard-card">
-            <p className="card-label">Total Bookings</p>
-            <h3 className="card-value">3,452</h3>
-            <p className="card-note">+12% vs last month</p>
+            <p className="card-label">📊 Total Bookings</p>
+            <h3 className="card-value">{reservations.length}</h3>
           </article>
           <article className="dashboard-card">
-            <p className="card-label">Active Listings</p>
-            <h3 className="card-value">1,268</h3>
-            <p className="card-note">+5% vs last month</p>
-          </article>
-          <article className="dashboard-card">
-            <p className="card-label">Monthly Revenue</p>
-            <h3 className="card-value">$284,521</h3>
-            <p className="card-note">+12%</p>
-          </article>
-          <article className="dashboard-card">
-            <p className="card-label">User Signups</p>
-            <h3 className="card-value">824</h3>
-            <p className="card-note">+12%</p>
+            <p className="card-label">👥 Data Pelanggan</p>
+            <h3 className="card-value">{customers.length}</h3>
           </article>
         </div>
 
@@ -74,11 +60,11 @@ const Dashboard = ({ onViewReservations }) => {
             <h3>Daftar Reservasi</h3>
           </div>
           <div className="reservasi-grid">
-            {reservations.map((item) => (
+            {reservations.slice(0, 4).map((item) => (
               <div
                 key={item.id}
                 className="reservasi-grid-item"
-                onClick={() => onViewReservations && onViewReservations()}
+                onClick={() => navigate('/reservations')}
                 style={{ cursor: 'pointer' }}
               >
                 <div className="reservasi-grid-header">
@@ -99,7 +85,7 @@ const Dashboard = ({ onViewReservations }) => {
         <article className="dashboard-table-card">
           <div className="card-heading">
             <h3>Recent Booking</h3>
-            <button type="button">View All</button>
+            <button type="button" onClick={() => navigate('/reservations')}>View All</button>
           </div>
           <div className="table-list">
             <div className="table-header">
@@ -107,16 +93,11 @@ const Dashboard = ({ onViewReservations }) => {
               <span>Guest</span>
               <span>Property</span>
             </div>
-            {[
-              ['BK-5782', 'Emma Thompson', 'Oceview Villa'],
-              ['BK-5782', 'James Wilson', 'Skyview Hotel'],
-              ['BK-5782', 'Sarah Miller', 'Downtown Apartm'],
-              ['BK-5782', 'Michael Brown', 'Luxury Penthouse'],
-            ].map(([id, guest, property]) => (
-              <div key={`${id}-${guest}`} className="table-row">
-                <div>{id}</div>
-                <div>{guest}</div>
-                <div>{property}</div>
+            {reservations.slice(0, 4).map((item) => (
+              <div key={item.id} className="table-row">
+                <div>{item.reservation}</div>
+                <div>{item.name}</div>
+                <div>Hotel Room</div>
               </div>
             ))}
           </div>
@@ -147,6 +128,5 @@ const Dashboard = ({ onViewReservations }) => {
     </div>
   );
 };
-
 
 export default Dashboard;

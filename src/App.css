@@ -111,6 +111,41 @@ button {
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
 }
 
+.sidebar-dashboard {
+  background: #111827;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 1.75rem;
+  margin: 1.5rem 1.5rem 0;
+  padding: 1.25rem;
+}
+
+.sidebar-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sidebar-dashboard-title {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.dashboard-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: #1f2937;
+  color: #f8fafc;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 .sidebar-reservasi {
   background: #111827;
   border: 1px solid rgba(148, 163, 184, 0.14);
@@ -504,29 +539,32 @@ button {
 .dashboard-performance-card {
   background: #fff;
   border-radius: 2rem;
-  padding: 1.5rem;
+  padding: 2rem;
   border: 1px solid rgba(148, 163, 184, 0.16);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
 }
 
 .card-label {
-  margin: 0 0 0.75rem;
+  margin: 0 0 1rem;
   color: #64748b;
   font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .card-value {
   margin: 0;
-  font-size: 2.55rem;
+  font-size: 3.5rem;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 800;
   color: #0f172a;
 }
 
 .card-note {
-  margin: 0.75rem 0 0;
+  margin: 1rem 0 0;
   color: #16a34a;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .stat-header {
@@ -667,6 +705,330 @@ button {
   margin: 0.25rem 0 0;
   color: #0f172a;
   font-weight: 700;
+}
+
+/* ─── Modal Styles ─────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+}
+
+.modal-content h3 {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  color: #0f172a;
+}
+
+.modal-content p {
+  margin: 0 0 1.5rem;
+  color: #64748b;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modal-actions button {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-success {
+  background: #16a34a;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+.btn-warning {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.btn-warning:hover {
+  background: #d97706;
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.btn-cancel:hover {
+  background: #cbd5e1;
+}
+
+.modal-edit {
+  max-width: 600px;
+}
+
+.modal-edit .form-row {
+  margin-bottom: 1.25rem;
+}
+
+.modal-edit .form-row label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.modal-edit .form-row input,
+.modal-edit .form-row textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  outline: none;
+  font-size: 1rem;
+  color: #0f172a;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.modal-edit .form-row input:focus,
+.modal-edit .form-row textarea:focus {
+  border-color: #38bdf8;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.modal-edit .modal-actions {
+  margin-top: 1.5rem;
+}
+
+/* ─── Auth Layout ─────────────────────────────────────── */
+
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  background: #f8fafc;
+}
+
+/* Sidebar Kiri */
+.auth-sidebar-left {
+  width: 480px;
+  background: #0f172a;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 2.5rem;
+  flex-shrink: 0;
+}
+
+.auth-sidebar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auth-brand-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 1.25rem;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3);
+}
+
+.auth-brand-label {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7dd3fc;
+  margin-bottom: 0.25rem;
+}
+
+.auth-brand-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.auth-info {
+  padding: 2rem;
+  background: rgba(56, 189, 248, 0.1);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.auth-info-heading {
+  margin: 0 0 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.auth-info-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+.auth-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.auth-feature-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.auth-feature-icon {
+  width: 48px;
+  height: 48px;
+  background: #1e293b;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.auth-feature-content h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.auth-feature-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.auth-sidebar-footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* Panel Kanan */
+.auth-main-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-form-title {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.auth-form-subtitle {
+  margin: 0 0 2rem;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.auth-links-bottom {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .auth-sidebar-left {
+    width: 400px;
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-features {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-layout {
+    flex-direction: column;
+  }
+
+  .auth-sidebar-left {
+    width: 100%;
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-sidebar-content {
+    gap: 2rem;
+  }
+
+  .auth-features {
+    display: none;
+  }
+
+  .auth-main-right {
+    padding: 2rem 1.5rem;
+  }
 }
 
 /* ─── Auth / Login Page ──────────────────────────────────── */
@@ -1059,7 +1421,7 @@ button {
 .table-header-reservasi,
 .table-row-reservasi {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1.2fr 1.1fr 1.2fr;
+  grid-template-columns: 0.8fr 1.2fr 1.2fr 1fr 1fr;
   padding: 1rem 1.25rem;
   gap: 1rem;
   align-items: center;
@@ -1135,12 +1497,14 @@ button {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .customer-page-header h2 {
   margin: 0;
   font-size: 1.75rem;
   color: #0f172a;
+  font-weight: 700;
 }
 
 .customer-page-content {
@@ -1159,12 +1523,13 @@ button {
   border-radius: 1.5rem;
   overflow: hidden;
   border: 1px solid #e2e8f0;
+  width: 100%;
 }
 
 .table-header-customer,
 .table-row-customer {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr 1.5fr 1.2fr 1fr;
+  grid-template-columns: 0.5fr 1.2fr 1.5fr 1.2fr 1fr;
   padding: 1rem 1.25rem;
   gap: 1rem;
   align-items: center;
@@ -1193,6 +1558,35 @@ button {
   font-size: 0.96rem;
 }
 
+.customer-photo-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  background: #38bdf8;
+  font-size: 1.5rem;
+}
+
+.btn-view-detail {
+  border: none;
+  background: #0ea5e9;
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-view-detail:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
 .customer-detail-card {
   background: #fff;
   border-radius: 2rem;
@@ -1201,78 +1595,131 @@ button {
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
 }
 
-.customer-detail-header {
+.customer-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.customer-detail-header-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.btn-back-detail {
+  border: none;
+  background: #e2e8f0;
+  color: #475569;
+  padding: 0.75rem 1rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.btn-back-detail:hover {
+  background: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.customer-detail-card-wrapper {
+  background: #fff;
+  border-radius: 2rem;
+  padding: 2rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.customer-detail-page h2 {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.customer-detail-profile {
   display: flex;
   align-items: center;
   gap: 2rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 2px solid #e2e8f0;
   margin-bottom: 2rem;
 }
 
-.customer-detail-photo {
-  width: 5rem;
-  height: 5rem;
+.customer-detail-photo-large {
+  width: 6rem;
+  height: 6rem;
   border-radius: 1.5rem;
-  background: #38bdf8;
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.5rem;
+  font-size: 3rem;
   flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3);
 }
 
-.customer-detail-info h3 {
-  margin: 0 0 0.5rem;
+.customer-detail-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.customer-detail-name h3 {
+  margin: 0;
   font-size: 1.5rem;
   color: #0f172a;
+  font-weight: 700;
 }
 
-.customer-detail-info p {
-  margin: 0.25rem 0;
+.customer-detail-name p {
+  margin: 0;
   color: #64748b;
   font-size: 0.95rem;
 }
 
-.customer-detail-body {
+.customer-detail-content {
   display: grid;
   gap: 2rem;
-  margin-bottom: 2rem;
+}
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .detail-section h4 {
-  margin: 0 0 1rem;
+  margin: 0;
   font-size: 1.1rem;
   color: #0f172a;
+  font-weight: 700;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 2rem;
   padding: 1rem;
   background: #f8fafc;
   border-radius: 1rem;
+  align-items: center;
 }
 
-.detail-row:not(:last-child) {
-  margin-bottom: 0.75rem;
-}
-
-.detail-label {
+.detail-row-label {
   color: #64748b;
   font-weight: 600;
-  min-width: 120px;
+  font-size: 0.95rem;
 }
 
-.detail-value {
+.detail-row-value {
   color: #0f172a;
   font-weight: 500;
-}
-
-.detail-value.full-width {
-  width: 100%;
+  font-size: 0.95rem;
 }
 
 .customer-detail-actions {
@@ -1280,7 +1727,24 @@ button {
   gap: 1rem;
   justify-content: flex-end;
   padding-top: 2rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 2px solid #e2e8f0;
+}
+
+.btn-edit {
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  padding: 0.95rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-edit:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 @media (max-width: 1024px) {
@@ -1314,14 +1778,14 @@ button {
 
   .table-header-reservasi,
   .table-row-reservasi {
-    grid-template-columns: 0.8fr 1fr 1fr 0.9fr 1fr;
+    grid-template-columns: 0.7fr 1fr 1fr 0.9fr 0.9fr;
     padding: 0.75rem;
     font-size: 0.85rem;
   }
 
   .table-header-customer,
   .table-row-customer {
-    grid-template-columns: 0.7fr 1fr 1.2fr 1fr 0.9fr;
+    grid-template-columns: 0.4fr 1fr 1.2fr 1fr 0.9fr;
     padding: 0.75rem;
     font-size: 0.85rem;
   }
@@ -1380,14 +1844,14 @@ button {
 
   .table-header-reservasi,
   .table-row-reservasi {
-    grid-template-columns: 0.7fr 0.8fr 0.9fr 0.7fr 0.8fr;
+    grid-template-columns: 0.6fr 0.9fr 0.9fr 0.8fr 0.8fr;
     padding: 0.5rem;
     font-size: 0.75rem;
   }
 
   .table-header-customer,
   .table-row-customer {
-    grid-template-columns: 0.6fr 0.9fr 1fr 0.9fr 0.8fr;
+    grid-template-columns: 0.3fr 0.9fr 1fr 0.9fr 0.8fr;
     padding: 0.5rem;
     font-size: 0.75rem;
   }

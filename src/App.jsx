@@ -5,7 +5,9 @@ import Register from './pages/auth/Register';
 import Forgot from './pages/auth/Forgot';
 import Dashboard from './pages/Dashboard';
 import ReservationPage from './pages/ReservationPage';
+import ReservationDetail from './pages/ReservationDetail';
 import CustomerPage from './pages/CustomerPage';
+import CustomerDetail from './pages/CustomerDetail';
 import MainLayout from './layouts/MainLayout';
 import './App.css';
 
@@ -13,8 +15,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => !!localStorage.getItem('token')
   );
-  const [currentPage, setCurrentPage] = useState('dashboard');
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const handleLogin = () => setIsLoggedIn(true);
 
@@ -22,27 +22,6 @@ function App() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setIsLoggedIn(false);
-    setCurrentPage('dashboard');
-    setSelectedCustomer(null);
-  };
-
-  const handleViewReservations = () => setCurrentPage('reservation');
-  const handleViewCustomers = () => setCurrentPage('customers');
-  const handleSelectCustomer = (customer) => setSelectedCustomer(customer);
-  const handleBackToDashboard = () => {
-    setCurrentPage('dashboard');
-    setSelectedCustomer(null);
-  };
-
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'reservation':
-        return <ReservationPage onBack={handleBackToDashboard} onSelectCustomer={handleSelectCustomer} />;
-      case 'customers':
-        return <CustomerPage onBack={handleBackToDashboard} />;
-      default:
-        return <Dashboard onViewReservations={handleViewReservations} />;
-    }
   };
 
   return (
@@ -61,18 +40,61 @@ function App() {
         element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Forgot />}
       />
 
-      {/* Protected route */}
+      {/* Protected routes with MainLayout */}
       <Route
         path="/dashboard"
         element={
           isLoggedIn ? (
-            <MainLayout
-              onLogout={handleLogout}
-              onViewReservations={handleViewReservations}
-              onViewCustomers={handleViewCustomers}
-              selectedCustomer={selectedCustomer}
-            >
-              {renderCurrentPage()}
+            <MainLayout onLogout={handleLogout}>
+              <Dashboard />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/reservations"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <ReservationPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/reservation-detail/:id"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <ReservationDetail />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/customers"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <CustomerPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/customer-detail/:id"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <CustomerDetail />
             </MainLayout>
           ) : (
             <Navigate to="/login" replace />

@@ -2,10 +2,10 @@ import React from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 
-const MainLayout = ({ children, onLogout, onViewReservations, onViewCustomers, selectedCustomer }) => {
+const MainLayout = ({ children, onLogout }) => {
   return (
     <div className="dashboard-shell">
-      <Sidebar onLogout={onLogout} onViewReservations={onViewReservations} onViewCustomers={onViewCustomers} selectedCustomer={selectedCustomer} />
+      <Sidebar onLogout={onLogout} />
       <div className="dashboard-main">
         <Header />
         <main className="dashboard-content">{children}</main>

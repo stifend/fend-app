@@ -1,23 +1,13 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import hotelLogo from '../assets/Hotel.jpg';
 import pp from '../assets/pp.jpg';
+import { useData } from '../context/DataContext';
 
-
-const navItems = [
-  { label: 'Dashboard', active: true },
-  { label: 'Booking' },
-  { label: 'Property Performance' },
-  { label: 'Analysis' },
-  { label: 'Settings' },
-];
-
-const Sidebar = ({ onLogout, onViewReservations, onViewCustomers, selectedCustomer }) => {
-  const reservations = [
-    { id: 'P001', name: 'Rina Amelia', reservation: 'RSV-7684', payment: 'Lunas' },
-    { id: 'P002', name: 'Andi Putra', reservation: 'RSV-7685', payment: 'Pending' },
-    { id: 'P003', name: 'Siti Rahma', reservation: 'RSV-7686', payment: 'Lunas' },
-    { id: 'P004', name: 'Budi Santoso', reservation: 'RSV-7687', payment: 'Belum Bayar' },
-  ];
+const Sidebar = ({ onLogout }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { reservations, customers } = useData();
 
   return (
     <aside className="dashboard-sidebar">
@@ -30,17 +20,37 @@ const Sidebar = ({ onLogout, onViewReservations, onViewCustomers, selectedCustom
           </div>
         </div>
 
+        {/* Menu Dashboard */}
+        <div className="sidebar-dashboard">
+          <div 
+            className="sidebar-dashboard-header" 
+            onClick={() => navigate('/dashboard')} 
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="sidebar-dashboard-title">Dashboard</p>
+            <span className="dashboard-count">1</span>
+          </div>
+        </div>
+
         <div className="sidebar-reservasi">
-          <div className="reservasi-header" onClick={() => onViewReservations && onViewReservations()} style={{ cursor: 'pointer' }}>
+          <div 
+            className="reservasi-header" 
+            onClick={() => navigate('/reservations')} 
+            style={{ cursor: 'pointer' }}
+          >
             <p className="reservasi-title">Reservasi</p>
             <span className="reservasi-count">{reservations.length}</span>
           </div>
         </div>
 
         <div className="sidebar-customers">
-          <div className="customers-header" onClick={() => onViewCustomers && onViewCustomers()} style={{ cursor: 'pointer' }}>
+          <div 
+            className="customers-header" 
+            onClick={() => navigate('/customers')} 
+            style={{ cursor: 'pointer' }}
+          >
             <p className="customers-title">Profil Pelanggan</p>
-            <span className="customers-count">4</span>
+            <span className="customers-count">{customers.length}</span>
           </div>
         </div>
       </div>
