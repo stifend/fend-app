@@ -12,10 +12,15 @@ const AuthLayout = ({ children, title, subtitle }) => {
         <div className="auth-sidebar-content">
           {/* Brand Section: Logo + Nama Aplikasi */}
           <div className="auth-brand">
-            <img src={hotelLogo} alt="Logo Hotel" className="auth-brand-logo" />
+            <div className="auth-logo-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="8" fill="#3b82f6"/>
+                <path d="M12 18L24 12L36 18V30L24 36L12 30V18Z" fill="white"/>
+                <path d="M24 12V24M24 24L36 18M24 24L12 18" stroke="#3b82f6" strokeWidth="2"/>
+              </svg>
+            </div>
             <div>
-              <span className="auth-brand-label">Awakening</span>
-              <h1 className="auth-brand-title">Dashboard Hotel</h1>
+              <h1 className="auth-brand-title">Novotel</h1>
             </div>
           </div>
 
@@ -61,7 +66,7 @@ const AuthLayout = ({ children, title, subtitle }) => {
 
         {/* Footer Sidebar: Copyright */}
         <div className="auth-sidebar-footer">
-          <p>© 2025 Awakening Hotel Dashboard</p>
+          <p>© 2025 Novotel Hotel Dashboard</p>
         </div>
       </aside>
 

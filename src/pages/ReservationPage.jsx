@@ -2,6 +2,8 @@
 import { useNavigate } from 'react-router-dom';
 // Import custom hook untuk akses data global
 import { useData } from '../context/DataContext';
+// Import komponen reusable
+import { Button, Badge, Table, EmptyState } from '../components';
 
 // Halaman List Reservasi: Menampilkan tabel semua reservasi
 const ReservationPage = () => {
@@ -12,76 +14,67 @@ const ReservationPage = () => {
   const { reservations } = useData();
 
   // Fungsi untuk navigasi ke halaman detail reservasi
-  // Parameter: item = object data reservasi yang diklik
   const handleViewDetail = (item) => {
-    // Navigate ke /reservation-detail/P001 (contoh)
-    // state: item = kirim data reservasi ke halaman detail (agar tidak perlu fetch ulang)
     navigate(`/reservation-detail/${item.id}`, { state: item });
   };
 
+  // Definisi kolom table
+  const columns = [
+    { header: 'ID', key: 'id', width: '100px' },
+    { header: 'Nama', key: 'name', width: '200px' },
+    { header: 'No. Reservasi', key: 'reservation', width: '150px' },
+    { 
+      header: 'Status', 
+      key: 'payment',
+      width: '120px',
+      render: (value) => (
+        /* 🔵 COMPONENT: Badge */
+        <Badge variant={value === 'Lunas' ? 'success' : value === 'Pending' ? 'warning' : 'danger'}>
+          {value}
+        </Badge>
+      )
+    },
+    {
+      header: 'Aksi',
+      key: 'id',
+      width: '150px',
+      render: (value, row) => (
+        /* 🔵 COMPONENT: Button */
+        <Button 
+          variant="primary" 
+          size="small"
+          onClick={() => handleViewDetail(row)}
+        >
+          Lihat Detail
+        </Button>
+      )
+    }
+  ];
+
   return (
     <div className="reservation-page">
-      {/* ========== HEADER HALAMAN ========== */}
+      {/* Header */}
       <div className="reservation-header">
         <h2>Daftar Reservasi</h2>
       </div>
       
-      {/* ========== CONTENT: Table Reservasi ========== */}
+      {/* Content */}
       <div className="reservation-content">
         <div className="reservasi-list-card">
-          {/* Conditional Rendering: Jika data kosong tampilkan pesan, jika ada tampilkan table */}
           {reservations.length === 0 ? (
-            // ========== TAMPILAN JIKA DATA KOSONG ==========
-            <div style={{ 
-              padding: '40px', 
-              textAlign: 'center', 
-              color: '#64748b',
-              fontSize: '16px'
-            }}>
-              <p>📋 Tidak ada data reservasi</p>
-            </div>
+            // 🔵 COMPONENT: EmptyState
+            <EmptyState 
+              icon={<span style={{fontSize: '48px'}}>📋</span>}
+              title="Tidak ada data reservasi" 
+              message="Belum ada reservasi yang terdaftar"
+            />
           ) : (
-            // ========== TAMPILAN TABLE JIKA ADA DATA ==========
-            <div className="reservasi-table">
-              {/* Header Table: Kolom ID, Nama, No. Reservasi, Status, Aksi */}
-              <div className="table-header-reservasi">
-                <span>ID</span>
-                <span>Nama</span>
-                <span>No. Reservasi</span>
-                <span>Status</span>
-                <span>Aksi</span>
-              </div>
-              
-              {/* Body Table: Loop semua data reservasi */}
-              {reservations.map((item) => (
-                <div key={item.id} className="table-row-reservasi">
-                  {/* Kolom 1: ID Pelanggan */}
-                  <span className="table-cell">{item.id}</span>
-                  
-                  {/* Kolom 2: Nama Pelanggan */}
-                  <span className="table-cell">{item.name}</span>
-                  
-                  {/* Kolom 3: Nomor Reservasi */}
-                  <span className="table-cell">{item.reservation}</span>
-                  
-                  {/* Kolom 4: Status Pembayaran (Lunas = hijau, lainnya = merah) */}
-                  <span className={`table-cell status ${item.payment === 'Lunas' ? 'paid' : 'unpaid'}`}>
-                    {item.payment}
-                  </span>
-                  
-                  {/* Kolom 5: Tombol Aksi - Lihat Detail */}
-                  <span className="table-cell">
-                    <button 
-                      type="button" 
-                      className="btn-view" 
-                      onClick={() => handleViewDetail(item)} // Klik → navigasi ke detail
-                    >
-                      Lihat Detail
-                    </button>
-                  </span>
-                </div>
-              ))}
-            </div>
+            // 🔵 COMPONENT: Table
+            <Table 
+              columns={columns} 
+              data={reservations}
+              className="reservasi-table"
+            />
           )}
         </div>
       </div>

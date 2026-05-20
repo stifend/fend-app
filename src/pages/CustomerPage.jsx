@@ -2,79 +2,75 @@
 import { useNavigate } from 'react-router-dom';
 // Import custom hook untuk akses data global
 import { useData } from '../context/DataContext';
+// Import komponen reusable
+import { Button, Table, EmptyState } from '../components';
 
-// Halaman List Customer: Menampilkan tabel semua customer
+// Halaman List Customer
 const CustomerPage = () => {
-  // Hook untuk navigasi ke halaman lain
+  // Hook untuk navigasi
   const navigate = useNavigate();
   
   // Ambil data customer dari Context API
   const { customers } = useData();
 
-  // Fungsi untuk navigasi ke halaman detail customer
-  // Parameter: customer = object data customer yang diklik
+  // Fungsi untuk navigasi ke detail
   const handleDetail = (customer) => {
-    // Navigate ke /customer-detail/P001 (contoh)
-    // state: customer = kirim data customer ke halaman detail (agar tidak perlu fetch ulang)
-    navigate(`/customer-detail/${customer.id}`, {
-      state: customer
-    });
+    navigate(`/customer-detail/${customer.id}`, { state: customer });
   };
+
+  // Definisi kolom table
+  const columns = [
+    { 
+      header: 'No', 
+      key: 'id',
+      width: '80px',
+      render: (value, row, index) => index + 1
+    },
+    { header: 'Nama', key: 'name', width: '200px' },
+    { header: 'Email', key: 'email', width: '250px' },
+    { header: 'Telepon', key: 'phone', width: '180px' },
+    {
+      header: 'Aksi',
+      key: 'id',
+      width: '150px',
+      render: (value, row) => (
+        /* 🔵 COMPONENT: Button */
+        <Button 
+          variant="primary" 
+          size="small"
+          onClick={() => handleDetail(row)}
+        >
+          Lihat Detail
+        </Button>
+      )
+    }
+  ];
 
   return (
     <div className="customer-page">
-      {/* ========== HEADER HALAMAN ========== */}
+      {/* Header */}
       <div className="customer-page-header">
         <h2>Daftar Pelanggan</h2>
       </div>
 
-      {/* ========== CONTENT: Table Customer ========== */}
+      {/* Content */}
       <div className="customer-page-content">
         <div className="customer-list-card">
-          {/* Table HTML Standard (thead + tbody) */}
-          <table className="customer-table">
-            {/* Header Table: Kolom No, Nama, Email, Telepon, Aksi */}
-            <thead className="table-header-customer">
-              <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>Telepon</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            
-            {/* Body Table: Loop semua data customer */}
-            <tbody>
-              {/* .map() dengan parameter (customer, index) */}
-              {/* customer = data customer, index = urutan (0, 1, 2, ...) */}
-              {customers.map((customer, index) => (
-                <tr key={customer.id} className="table-row-customer">
-                  {/* Kolom 1: Nomor urut (index + 1 karena index mulai dari 0) */}
-                  <td className="table-cell-customer">{index + 1}</td>
-                  
-                  {/* Kolom 2: Nama Customer */}
-                  <td className="table-cell-customer">{customer.name}</td>
-                  
-                  {/* Kolom 3: Email Customer */}
-                  <td className="table-cell-customer">{customer.email}</td>
-                  
-                  {/* Kolom 4: Nomor Telepon Customer */}
-                  <td className="table-cell-customer">{customer.phone}</td>
-                  
-                  {/* Kolom 5: Tombol Aksi - Lihat Detail */}
-                  <td className="table-cell-customer">
-                    <button 
-                      className="btn-view-detail"
-                      onClick={() => handleDetail(customer)} // Klik → navigasi ke detail
-                    >
-                      Lihat Detail
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {customers.length === 0 ? (
+            // 🔵 COMPONENT: EmptyState
+            <EmptyState 
+              icon={<span style={{fontSize: '48px'}}>👥</span>}
+              title="Tidak ada data pelanggan" 
+              message="Belum ada pelanggan yang terdaftar"
+            />
+          ) : (
+            // 🔵 COMPONENT: Table
+            <Table 
+              columns={columns} 
+              data={customers}
+              className="customer-table"
+            />
+          )}
         </div>
       </div>
     </div>

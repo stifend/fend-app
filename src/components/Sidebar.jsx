@@ -21,10 +21,15 @@ const Sidebar = ({ onLogout }) => {
       <div>
         {/* ========== BRAND / LOGO ========== */}
         <div className="sidebar-brand">
-          <img src={hotelLogo} alt="Logo Hotel" className="logo" />
+          <div className="logo-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="6" fill="#3b82f6"/>
+              <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" fill="white"/>
+              <path d="M16 8V16M16 16L24 12M16 16L8 12" stroke="#3b82f6" strokeWidth="1.5"/>
+            </svg>
+          </div>
           <div>
-            <span className="brand-label">Awakening</span>
-            <h1 className="sidebar-title">Dashboard Hotel</h1>
+            <h1 className="sidebar-title">Novotel</h1>
           </div>
         </div>
 
