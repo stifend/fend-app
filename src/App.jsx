@@ -20,6 +20,7 @@ import MembershipPage from './pages/MembershipPage';
 import HotelDataPage from './pages/HotelDataPage';
 import RoomsPage from './pages/RoomsPage';
 import FeedbackPage from './pages/FeedbackPage';
+import UsersPage from './pages/UsersPage';
 
 // Import layout wrapper untuk halaman dashboard (sidebar + header)
 import MainLayout from './layouts/MainLayout';
@@ -47,19 +48,19 @@ function App() {
   return (
     <Routes>
       {/* ========== ROUTE PUBLIK (Tidak perlu login) ========== */}
-      
+
       {/* Route Login: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman login */}
       <Route
         path="/login"
         element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />}
       />
-      
+
       {/* Route Register: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman register */}
       <Route
         path="/register"
         element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Register />}
       />
-      
+
       {/* Route Forgot Password: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman forgot */}
       <Route
         path="/forgot"
@@ -68,7 +69,7 @@ function App() {
 
       {/* ========== ROUTE TERLINDUNGI (Harus login dulu) ========== */}
       {/* Semua route ini dibungkus dengan MainLayout (ada Sidebar + Header) */}
-      
+
       {/* Route Dashboard: Halaman utama setelah login */}
       <Route
         path="/dashboard"
@@ -82,7 +83,7 @@ function App() {
           )
         }
       />
-      
+
       {/* Route Reservations: Halaman list semua reservasi */}
       <Route
         path="/reservations"
@@ -96,7 +97,7 @@ function App() {
           )
         }
       />
-      
+
       {/* Route Reservation Detail: Halaman detail 1 reservasi berdasarkan ID */}
       {/* :id adalah parameter dinamis, contoh: /reservation-detail/P001 */}
       <Route
@@ -111,7 +112,7 @@ function App() {
           )
         }
       />
-      
+
       {/* Route Customers: Halaman list semua customer */}
       <Route
         path="/customers"
@@ -125,7 +126,7 @@ function App() {
           )
         }
       />
-      
+
       {/* Route Customer Detail: Halaman detail 1 customer berdasarkan ID */}
       {/* :id adalah parameter dinamis, contoh: /customer-detail/P001 */}
       <Route
@@ -218,6 +219,20 @@ function App() {
           isLoggedIn ? (
             <MainLayout onLogout={handleLogout}>
               <FeedbackPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      {/* Route Users: Halaman manajemen user (admin CRUD, user view-only) */}
+      <Route
+        path="/users"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <UsersPage />
             </MainLayout>
           ) : (
             <Navigate to="/login" replace />

@@ -8,27 +8,30 @@ import { useData } from '../context/DataContext';
 const Sidebar = ({ onLogout }) => {
   // Hook untuk navigasi ke halaman lain
   const navigate = useNavigate();
-  
+
   // Ambil data reservasi dan customer dari Context API
   const { reservations, customers } = useData();
+
+  // Ambil data user yang sedang login (untuk profile card)
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
   // ========== HITUNG DATA DUMMY UNTUK BADGE ========== 
   // Hitung jumlah transaksi yang lunas
   const paidCount = reservations.filter(r => r.payment === 'Lunas').length;
-  
+
   // Hitung jumlah laporan (bulan unik dari check-in)
   const uniqueMonths = [...new Set(reservations.map(r => {
     const date = new Date(r.checkIn);
     return `${date.getMonth()}-${date.getFullYear()}`;
   }))].length;
-  
+
   // Hitung member (customer dengan membership)
   const memberCount = customers.filter(c => c.membershipLevel && c.membershipLevel !== 'None').length;
-  
+
   // Hitung total kamar (dari tipe kamar yang ada)
   const roomTypes = [...new Set(reservations.map(r => r.roomType))];
   const totalRooms = 250; // Total kamar hotel (dummy)
-  
+
   // Hitung feedback (30% dari total reservasi)
   const feedbackCount = Math.floor(reservations.length * 0.3);
 
@@ -39,9 +42,9 @@ const Sidebar = ({ onLogout }) => {
         <div className="sidebar-brand">
           <div className="logo-icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="6" fill="#3b82f6"/>
-              <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" fill="white"/>
-              <path d="M16 8V16M16 16L24 12M16 16L8 12" stroke="#3b82f6" strokeWidth="1.5"/>
+              <rect width="32" height="32" rx="6" fill="#3b82f6" />
+              <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" fill="white" />
+              <path d="M16 8V16M16 16L24 12M16 16L8 12" stroke="#3b82f6" strokeWidth="1.5" />
             </svg>
           </div>
           <div>
@@ -51,9 +54,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU DASHBOARD ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/dashboard')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/dashboard')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">📊 Dashboard</p>
@@ -63,9 +66,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU RESERVASI ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/reservations')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/reservations')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">📋 Reservasi</p>
@@ -75,9 +78,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU PROFIL PELANGGAN ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/customers')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/customers')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">👥 Profil Pelanggan</p>
@@ -87,9 +90,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU PEMBAYARAN ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/payments')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/payments')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">💳 Pembayaran</p>
@@ -99,9 +102,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU LAPORAN ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/reports')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/reports')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">📊 Laporan</p>
@@ -111,9 +114,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU MEMBERSHIP ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/membership')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/membership')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">⭐ Membership</p>
@@ -123,9 +126,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU KAMAR ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/rooms')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/rooms')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">🏨 Kamar</p>
@@ -135,9 +138,9 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU DATA HOTEL ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/hotel-data')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/hotel-data')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">🏢 Data Hotel</p>
@@ -147,13 +150,24 @@ const Sidebar = ({ onLogout }) => {
 
         {/* ========== MENU FEEDBACK ========== */}
         <div className="sidebar-menu-item">
-          <div 
-            className="menu-item-header" 
-            onClick={() => navigate('/feedback')} 
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/feedback')}
             style={{ cursor: 'pointer' }}
           >
             <p className="menu-item-title">💬 Feedback</p>
             <span className="menu-item-badge">{feedbackCount}</span>
+          </div>
+        </div>
+
+        {/* ========== MENU MANAJEMEN USER ========== */}
+        <div className="sidebar-menu-item">
+          <div
+            className="menu-item-header"
+            onClick={() => navigate('/users')}
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="menu-item-title">🔑 Manajemen User</p>
           </div>
         </div>
       </div>
@@ -164,11 +178,11 @@ const Sidebar = ({ onLogout }) => {
         <div className="profile-card">
           <img src={pp} alt="Profile Picture" className="logo" />
           <div>
-            <p className="profile-name">Stifend</p>
-            <p className="profile-subtitle">View profile</p>
+            <p className="profile-name">{currentUser.name || 'Pengguna'}</p>
+            <p className="profile-subtitle">{currentUser.role || 'user'}</p>
           </div>
         </div>
-        
+
         {/* Tombol logout: panggil fungsi onLogout dari props */}
         {/* onLogout akan hapus token dan redirect ke halaman login */}
         <button type="button" className="btn btn-logout" onClick={onLogout}>
