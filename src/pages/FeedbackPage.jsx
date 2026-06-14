@@ -1,6 +1,7 @@
 // Halaman Feedback & Complaint - Feedback dari customer
 import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
+import '../modern-pages.css';
 
 const FeedbackPage = () => {
   const { customers } = useData();

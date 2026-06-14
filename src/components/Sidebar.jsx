@@ -1,7 +1,6 @@
 // Import library React Router untuk navigasi
-import { useNavigate, useLocation } from 'react-router-dom';
-// Import gambar logo dan profile picture
-import hotelLogo from '../assets/Hotel.jpg';
+import { useNavigate } from 'react-router-dom';
+// Import gambar profile picture
 import pp from '../assets/pp.jpg';
 // Import custom hook untuk akses data global
 import { useData } from '../context/DataContext';
@@ -10,11 +9,28 @@ const Sidebar = ({ onLogout }) => {
   // Hook untuk navigasi ke halaman lain
   const navigate = useNavigate();
   
-  // Hook untuk mendapatkan URL saat ini (tidak dipakai tapi bisa untuk highlight menu aktif)
-  const location = useLocation();
-  
   // Ambil data reservasi dan customer dari Context API
   const { reservations, customers } = useData();
+
+  // ========== HITUNG DATA DUMMY UNTUK BADGE ========== 
+  // Hitung jumlah transaksi yang lunas
+  const paidCount = reservations.filter(r => r.payment === 'Lunas').length;
+  
+  // Hitung jumlah laporan (bulan unik dari check-in)
+  const uniqueMonths = [...new Set(reservations.map(r => {
+    const date = new Date(r.checkIn);
+    return `${date.getMonth()}-${date.getFullYear()}`;
+  }))].length;
+  
+  // Hitung member (customer dengan membership)
+  const memberCount = customers.filter(c => c.membershipLevel && c.membershipLevel !== 'None').length;
+  
+  // Hitung total kamar (dari tipe kamar yang ada)
+  const roomTypes = [...new Set(reservations.map(r => r.roomType))];
+  const totalRooms = 250; // Total kamar hotel (dummy)
+  
+  // Hitung feedback (30% dari total reservasi)
+  const feedbackCount = Math.floor(reservations.length * 0.3);
 
   return (
     <aside className="dashboard-sidebar">
@@ -34,44 +50,110 @@ const Sidebar = ({ onLogout }) => {
         </div>
 
         {/* ========== MENU DASHBOARD ========== */}
-        {/* Klik menu ini akan navigasi ke halaman /dashboard */}
-        <div className="sidebar-dashboard">
+        <div className="sidebar-menu-item">
           <div 
-            className="sidebar-dashboard-header" 
+            className="menu-item-header" 
             onClick={() => navigate('/dashboard')} 
             style={{ cursor: 'pointer' }}
           >
-            <p className="sidebar-dashboard-title">Dashboard</p>
-            {/* Badge menampilkan angka 1 (fixed, tidak dinamis) */}
-            <span className="dashboard-count">1</span>
+            <p className="menu-item-title">📊 Dashboard</p>
+            <span className="menu-item-badge">1</span>
           </div>
         </div>
 
         {/* ========== MENU RESERVASI ========== */}
-        {/* Klik menu ini akan navigasi ke halaman /reservations */}
-        <div className="sidebar-reservasi">
+        <div className="sidebar-menu-item">
           <div 
-            className="reservasi-header" 
+            className="menu-item-header" 
             onClick={() => navigate('/reservations')} 
             style={{ cursor: 'pointer' }}
           >
-            <p className="reservasi-title">Reservasi</p>
-            {/* Badge menampilkan jumlah reservasi secara dinamis dari Context */}
-            <span className="reservasi-count">{reservations.length}</span>
+            <p className="menu-item-title">📋 Reservasi</p>
+            <span className="menu-item-badge">{reservations.length}</span>
           </div>
         </div>
 
         {/* ========== MENU PROFIL PELANGGAN ========== */}
-        {/* Klik menu ini akan navigasi ke halaman /customers */}
-        <div className="sidebar-customers">
+        <div className="sidebar-menu-item">
           <div 
-            className="customers-header" 
+            className="menu-item-header" 
             onClick={() => navigate('/customers')} 
             style={{ cursor: 'pointer' }}
           >
-            <p className="customers-title">Profil Pelanggan</p>
-            {/* Badge menampilkan jumlah customer secara dinamis dari Context */}
-            <span className="customers-count">{customers.length}</span>
+            <p className="menu-item-title">👥 Profil Pelanggan</p>
+            <span className="menu-item-badge">{customers.length}</span>
+          </div>
+        </div>
+
+        {/* ========== MENU PEMBAYARAN ========== */}
+        <div className="sidebar-menu-item">
+          <div 
+            className="menu-item-header" 
+            onClick={() => navigate('/payments')} 
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="menu-item-title">💳 Pembayaran</p>
+            <span className="menu-item-badge">{paidCount}</span>
+          </div>
+        </div>
+
+        {/* ========== MENU LAPORAN ========== */}
+        <div className="sidebar-menu-item">
+          <div 
+            className="menu-item-header" 
+            onClick={() => navigate('/reports')} 
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="menu-item-title">📊 Laporan</p>
+            <span className="menu-item-badge">{uniqueMonths}</span>
+          </div>
+        </div>
+
+        {/* ========== MENU MEMBERSHIP ========== */}
+        <div className="sidebar-menu-item">
+          <div 
+            className="menu-item-header" 
+            onClick={() => navigate('/membership')} 
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="menu-item-title">⭐ Membership</p>
+            <span className="menu-item-badge">{memberCount}</span>
+          </div>
+        </div>
+
+        {/* ========== MENU KAMAR ========== */}
+        <div className="sidebar-menu-item">
+          <div 
+            className="menu-item-header" 
+            onClick={() => navigate('/rooms')} 
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="menu-item-title">🏨 Kamar</p>
+            <span className="menu-item-badge">{totalRooms}</span>
+          </div>
+        </div>
+
+        {/* ========== MENU DATA HOTEL ========== */}
+        <div className="sidebar-menu-item">
+          <div 
+            className="menu-item-header" 
+            onClick={() => navigate('/hotel-data')} 
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="menu-item-title">🏢 Data Hotel</p>
+            <span className="menu-item-badge">5</span>
+          </div>
+        </div>
+
+        {/* ========== MENU FEEDBACK ========== */}
+        <div className="sidebar-menu-item">
+          <div 
+            className="menu-item-header" 
+            onClick={() => navigate('/feedback')} 
+            style={{ cursor: 'pointer' }}
+          >
+            <p className="menu-item-title">💬 Feedback</p>
+            <span className="menu-item-badge">{feedbackCount}</span>
           </div>
         </div>
       </div>

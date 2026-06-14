@@ -2,6 +2,7 @@
 import { useData } from '../context/DataContext';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../modern-pages.css';
 
 const MembershipPage = () => {
   const { customers } = useData();

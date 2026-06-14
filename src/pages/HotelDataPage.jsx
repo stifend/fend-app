@@ -1,5 +1,6 @@
 // Halaman Data Hotel - Informasi lengkap tentang hotel
 import { useState } from 'react';
+import '../modern-pages.css';
 
 const HotelDataPage = () => {
   const [hotelInfo] = useState({

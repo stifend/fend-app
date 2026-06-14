@@ -14,6 +14,12 @@ import ReservationPage from './pages/ReservationPage';
 import ReservationDetail from './pages/ReservationDetail';
 import CustomerPage from './pages/CustomerPage';
 import CustomerDetail from './pages/CustomerDetail';
+import PaymentsPage from './pages/PaymentsPage';
+import ReportsPage from './pages/ReportsPage';
+import MembershipPage from './pages/MembershipPage';
+import HotelDataPage from './pages/HotelDataPage';
+import RoomsPage from './pages/RoomsPage';
+import FeedbackPage from './pages/FeedbackPage';
 
 // Import layout wrapper untuk halaman dashboard (sidebar + header)
 import MainLayout from './layouts/MainLayout';
@@ -128,6 +134,90 @@ function App() {
           isLoggedIn ? (
             <MainLayout onLogout={handleLogout}>
               <CustomerDetail />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      {/* Route Payments: Halaman pembayaran dan statistik transaksi */}
+      <Route
+        path="/payments"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <PaymentsPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      {/* Route Reports: Halaman laporan dan analitik */}
+      <Route
+        path="/reports"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <ReportsPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      {/* Route Membership: Halaman membership pelanggan */}
+      <Route
+        path="/membership"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <MembershipPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      {/* Route Hotel Data: Halaman informasi hotel */}
+      <Route
+        path="/hotel-data"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <HotelDataPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      {/* Route Rooms: Halaman manajemen kamar hotel */}
+      <Route
+        path="/rooms"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <RoomsPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      {/* Route Feedback: Halaman feedback dan review pelanggan */}
+      <Route
+        path="/feedback"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <FeedbackPage />
             </MainLayout>
           ) : (
             <Navigate to="/login" replace />

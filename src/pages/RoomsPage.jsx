@@ -1,6 +1,7 @@
 // Halaman Data Kamar - Menampilkan statistik kamar berdasarkan data reservasi
 import { useData } from '../context/DataContext';
 import { useMemo } from 'react';
+import '../modern-pages.css';
 
 const RoomsPage = () => {
   const { reservations } = useData();
