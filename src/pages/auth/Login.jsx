@@ -66,17 +66,31 @@ export default function Login({ onLogin }) {
       // ========== LOGIN BERHASIL ==========
       const user = data[0]; // Ambil data user dari hasil query
 
-      // 1. Simpan token sederhana ke localStorage (penanda sudah login)
-      localStorage.setItem("token", `local-token-${user.id}`);
-
-      // 2. Simpan data user (termasuk role) ke localStorage
-      localStorage.setItem("user", JSON.stringify(user));
-
-      // 3. Panggil callback onLogin dari props (set isLoggedIn = true di App.jsx)
-      if (onLogin) onLogin(user);
-
-      // 4. Redirect ke dashboard
-      navigate("/dashboard", { replace: true });
+      // Cek role dan redirect sesuai role
+      if (user.role === 'admin') {
+        // ========== ADMIN LOGIN ==========
+        // 1. Simpan token admin ke localStorage
+        localStorage.setItem("token", `local-token-${user.id}`);
+        
+        // 2. Simpan data user (termasuk role) ke localStorage
+        localStorage.setItem("user", JSON.stringify(user));
+        
+        // 3. Panggil callback onLogin dari props (set isLoggedIn = true di App.jsx)
+        if (onLogin) onLogin(user);
+        
+        // 4. Redirect ke admin dashboard
+        navigate("/dashboard", { replace: true });
+      } else {
+        // ========== MEMBER/USER LOGIN ==========
+        // 1. Simpan token member ke localStorage
+        localStorage.setItem("memberToken", `member-token-${user.id}`);
+        
+        // 2. Simpan data member ke localStorage
+        localStorage.setItem("member", JSON.stringify(user));
+        
+        // 3. Redirect ke member dashboard
+        navigate("/member-dashboard", { replace: true });
+      }
     } catch {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
     } finally {
@@ -87,8 +101,8 @@ export default function Login({ onLogin }) {
   return (
     // Wrapper AuthLayout: Sidebar (kiri) + Form Panel (kanan)
     <AuthLayout
-      title="Login ke Dashboard"
-      subtitle="Masuk untuk mengelola hotel Anda"
+      title="Login"
+      subtitle="Masuk dengan akun Admin atau Member"
     >
       {/* ========== ALERT ERROR ========== */}
       {error && (
@@ -115,7 +129,7 @@ export default function Login({ onLogin }) {
             id="email"
             type="email"
             name="email"
-            placeholder="contoh: admin@novotel.com"
+            placeholder="contoh: admin@novotel.com atau member@novotel.com"
             value={dataForm.email}
             onChange={handleChange}
             required

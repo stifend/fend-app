@@ -56,6 +56,12 @@ export const DataProvider = ({ children }) => {
     );
   };
 
+  // Fungsi untuk menambah reservasi baru
+  // Parameter: newReservation = object berisi data reservasi baru
+  const addReservation = (newReservation) => {
+    setReservations(prev => [newReservation, ...prev]); // Tambah di awal array
+  };
+
   // Return Provider dengan value berisi data dan fungsi-fungsi
   // Semua component di dalam {children} bisa akses value ini
   return (
@@ -66,6 +72,7 @@ export const DataProvider = ({ children }) => {
         updateReservationPayment,  // Fungsi update payment
         updateReservation,         // Fungsi update reservasi
         updateCustomer,            // Fungsi update customer
+        addReservation,            // Fungsi tambah reservasi baru
       }}
     >
       {children}

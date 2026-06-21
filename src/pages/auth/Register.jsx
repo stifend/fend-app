@@ -61,11 +61,7 @@ export default function Register() {
 
     try {
       // Panggil fungsi register_user di Supabase (buat akun baru)
-      const { error: rpcError } = await supabase.rpc("register_user", {
-        p_name: dataForm.name,
-        p_email: dataForm.email,
-        p_password: dataForm.password,
-      });
+     
 
       // Jika ada error (misal email sudah terdaftar)
       if (rpcError) {

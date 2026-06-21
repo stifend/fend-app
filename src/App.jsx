@@ -20,6 +20,11 @@ import MembershipPage from './pages/MembershipPage';
 import HotelDataPage from './pages/HotelDataPage';
 import RoomsPage from './pages/RoomsPage';
 import FeedbackPage from './pages/FeedbackPage';
+
+// Import halaman Guest & Member
+import GuestPage from './pages/GuestPage';
+import MemberDashboard from './pages/MemberDashboard';
+import BookingPage from './pages/BookingPage';
 import UsersPage from './pages/UsersPage';
 
 // Import layout wrapper untuk halaman dashboard (sidebar + header)
@@ -49,19 +54,28 @@ function App() {
     <Routes>
       {/* ========== ROUTE PUBLIK (Tidak perlu login) ========== */}
 
-      {/* Route Login: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman login */}
+      {/* Route Guest Page (Landing Page) */}
+      <Route path="/" element={<GuestPage />} />
+      
+      {/* Route Member Dashboard (dilindungi) */}
+      <Route path="/member-dashboard" element={<MemberDashboard />} />
+
+      {/* Route Booking (dilindungi untuk member) */}
+      <Route path="/booking" element={<BookingPage />} />
+
+      {/* Route Login Unified: Jika sudah login redirect sesuai role */}
       <Route
         path="/login"
         element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />}
       />
 
-      {/* Route Register: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman register */}
+      {/* Route Register Admin: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman register */}
       <Route
         path="/register"
         element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Register />}
       />
 
-      {/* Route Forgot Password: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman forgot */}
+      {/* Route Forgot Password Admin: Jika sudah login redirect ke dashboard, jika belum tampilkan halaman forgot */}
       <Route
         path="/forgot"
         element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Forgot />}
@@ -79,7 +93,7 @@ function App() {
               <Dashboard />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace /> // Jika belum login, paksa ke halaman login
+            <Navigate to="/" replace /> // Jika belum login, redirect ke Guest Page
           )
         }
       />
@@ -93,7 +107,7 @@ function App() {
               <ReservationPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -108,7 +122,7 @@ function App() {
               <ReservationDetail />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -122,7 +136,7 @@ function App() {
               <CustomerPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -137,7 +151,7 @@ function App() {
               <CustomerDetail />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -151,7 +165,7 @@ function App() {
               <PaymentsPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -165,7 +179,7 @@ function App() {
               <ReportsPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -179,7 +193,7 @@ function App() {
               <MembershipPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -193,7 +207,7 @@ function App() {
               <HotelDataPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -207,7 +221,7 @@ function App() {
               <RoomsPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -221,7 +235,7 @@ function App() {
               <FeedbackPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
@@ -235,15 +249,15 @@ function App() {
               <UsersPage />
             </MainLayout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         }
       />
 
       {/* ========== FALLBACK ROUTE ========== */}
-      {/* Jika URL tidak cocok dengan route manapun, redirect berdasarkan status login */}
-      {/* Sudah login → ke dashboard, belum login → ke login */}
-      <Route path="*" element={<Navigate to={isLoggedIn ? '/dashboard' : '/login'} replace />} />
+      {/* Jika URL tidak cocok dengan route manapun, redirect ke GuestPage */}
+      {/* Semua akses dimulai dari Guest Page terlebih dahulu */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
