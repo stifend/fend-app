@@ -2,11 +2,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { getTierBySpending, getNextTier, membershipBenefits, TIER_ICONS } from '../utils/membership';
 import '../guest-page.css';
 
 const MemberDashboard = () => {
   const navigate = useNavigate();
-  const { reservations, customers } = useData();
+  const { reservations } = useData();
   const [activeTab, setActiveTab] = useState('profile');
   const [memberData, setMemberData] = useState(null);
 
@@ -21,6 +22,7 @@ const MemberDashboard = () => {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- disengaja: inisialisasi state dari localStorage
     setMemberData(JSON.parse(member));
   }, [navigate]);
 
@@ -50,6 +52,20 @@ const MemberDashboard = () => {
     };
     return stats;
   }, [memberTransactions]);
+
+  // ========== MEMBERSHIP ==========
+  // Tier ditentukan dari total pengeluaran (totalSpent) member.
+  const tier = useMemo(
+    () => getTierBySpending(memberStats.totalSpent),
+    [memberStats.totalSpent]
+  );
+  // Info menuju tier berikutnya (null jika sudah Platinum)
+  const nextTier = useMemo(
+    () => getNextTier(memberStats.totalSpent),
+    [memberStats.totalSpent]
+  );
+  // Daftar benefit untuk tier saat ini (kosong jika None)
+  const benefits = membershipBenefits[tier] || [];
 
   if (!memberData) {
     return (
@@ -154,9 +170,67 @@ const MemberDashboard = () => {
                   </div>
                 </div>
               </div>
+
+              {/* ========== KARTU STATUS MEMBERSHIP ========== */}
+              <div className={`membership-card-member tier-${tier.toLowerCase()}`}>
+                <div className="membership-card-header">
+                  <div className="membership-tier-badge">
+                    <span className="membership-tier-icon">{TIER_ICONS[tier]}</span>
+                    <div>
+                      <div className="membership-tier-label">Status Membership</div>
+                      <div className="membership-tier-name">
+                        {tier === 'None' ? 'Belum Ada Tier' : tier}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="membership-spent">
+                    <div className="membership-spent-label">Total Pengeluaran</div>
+                    <div className="membership-spent-value">
+                      Rp {memberStats.totalSpent.toLocaleString('id-ID')}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Progress menuju tier berikutnya */}
+                {nextTier ? (
+                  <div className="membership-progress">
+                    <p className="membership-progress-text">
+                      💡 Kurang <strong>Rp {nextTier.remaining.toLocaleString('id-ID')}</strong> lagi
+                      menuju tier <strong>{nextTier.tier}</strong>
+                    </p>
+                    <div className="membership-progress-bar">
+                      <div
+                        className="membership-progress-fill"
+                        style={{
+                          width: `${Math.min(100, (memberStats.totalSpent / nextTier.minSpent) * 100)}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="membership-progress-text">
+                    🎉 Selamat! Anda berada di tier tertinggi (Platinum).
+                  </p>
+                )}
+
+                {/* Daftar benefit tier saat ini */}
+                {benefits.length > 0 ? (
+                  <div className="membership-benefits-member">
+                    <h4>🎁 Benefit Anda</h4>
+                    <ul>
+                      {benefits.map((benefit, idx) => (
+                        <li key={idx}>✓ {benefit}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="membership-empty-note">
+                    Lakukan booking pertama Anda untuk membuka tier <strong>Silver</strong> dan benefitnya!
+                  </p>
+                )}
+              </div>
             </div>
           )}
-
           {/* Booking Tab */}
           {activeTab === 'booking' && (
             <div className="booking-tab-section">

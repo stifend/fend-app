@@ -1,54 +1,44 @@
-// Halaman Feedback & Complaint - Feedback dari customer
-import { useState, useMemo } from 'react';
-import { useData } from '../context/DataContext';
+// Halaman Feedback & Complaint - Feedback dari customer (sumber: Supabase)
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { supabase } from '../lib/supabase';
 import '../modern-pages.css';
 
 const FeedbackPage = () => {
-  const { customers } = useData();
   const [selectedRating, setSelectedRating] = useState('All');
+  const [feedbackData, setFeedbackData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Generate feedback data dari customers (mock data)
-  const feedbackData = useMemo(() => {
-    return customers.slice(0, 100).map((customer, index) => {
-      const ratings = [5, 5, 4, 4, 4, 3, 3, 2, 1];
-      const rating = ratings[index % ratings.length];
-      const types = ['Compliment', 'Suggestion', 'Complaint'];
-      const type = rating >= 4 ? 'Compliment' : rating === 3 ? 'Suggestion' : 'Complaint';
-      
-      const messages = {
-        5: ['Pelayanan sangat memuaskan!', 'Hotel terbaik yang pernah saya kunjungi', 'Staff sangat ramah dan profesional'],
-        4: ['Secara keseluruhan bagus', 'Kamar bersih dan nyaman', 'Lokasi strategis'],
-        3: ['Cukup baik tapi bisa lebih baik', 'Perlu peningkatan di beberapa area', 'Standar hotel bintang 4'],
-        2: ['Kurang memuaskan', 'Perlu banyak perbaikan', 'Tidak sesuai ekspektasi'],
-        1: ['Sangat mengecewakan', 'Pelayanan buruk', 'Tidak akan kembali lagi']
-      };
-      
-      return {
-        id: `FB${String(index + 1).padStart(3, '0')}`,
-        customerId: customer.id,
-        customerName: customer.name,
-        email: customer.email,
-        rating,
-        type,
-        message: messages[rating][index % messages[rating].length],
-        date: new Date(2025, Math.floor(Math.random() * 5), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
-        status: index % 3 === 0 ? 'Resolved' : 'Pending'
-      };
-    });
-  }, [customers]);
+  // Ambil data feedback dari Supabase (RPC get_all_feedback)
+  const fetchFeedback = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    const { data, error: rpcError } = await supabase.rpc('get_all_feedback');
+    if (rpcError) {
+      console.error('Gagal memuat feedback:', rpcError);
+      setError('Gagal memuat data feedback.');
+    } else {
+      setFeedbackData(data || []);
+    }
+    setLoading(false);
+  }, []);
 
-  // Statistik feedback
+  useEffect(() => {
+    fetchFeedback();
+  }, [fetchFeedback]);
+
+    // Statistik feedback (aman saat data kosong -> avgRating 0.0)
   const feedbackStats = useMemo(() => {
-    const stats = {
-      total: feedbackData.length,
+    const total = feedbackData.length;
+    return {
+      total,
       compliment: feedbackData.filter(f => f.type === 'Compliment').length,
       suggestion: feedbackData.filter(f => f.type === 'Suggestion').length,
       complaint: feedbackData.filter(f => f.type === 'Complaint').length,
-      avgRating: (feedbackData.reduce((sum, f) => sum + f.rating, 0) / feedbackData.length).toFixed(1),
+      avgRating: total ? (feedbackData.reduce((sum, f) => sum + f.rating, 0) / total).toFixed(1) : '0.0',
       resolved: feedbackData.filter(f => f.status === 'Resolved').length,
       pending: feedbackData.filter(f => f.status === 'Pending').length
     };
-    return stats;
   }, [feedbackData]);
 
   // Filter feedback
@@ -57,7 +47,7 @@ const FeedbackPage = () => {
     return feedbackData.filter(f => f.rating === parseInt(selectedRating));
   }, [feedbackData, selectedRating]);
 
-  const getRatingStars = (rating) => {
+    const getRatingStars = (rating) => {
     return '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
   };
 
@@ -68,6 +58,10 @@ const FeedbackPage = () => {
         <h2>💬 Feedback & Complaint</h2>
         <p className="page-subtitle">Kelola feedback dan keluhan dari customer</p>
       </div>
+
+      {/* Status loading / error */}
+      {loading && <p style={{ color: '#64748b' }}>Memuat data feedback...</p>}
+      {error && <p style={{ color: '#dc2626' }}>{error}</p>}
 
       {/* Feedback Stats */}
       <div className="feedback-stats-grid">

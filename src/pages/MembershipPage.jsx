@@ -2,6 +2,7 @@
 import { useData } from '../context/DataContext';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { membershipBenefits } from '../utils/membership';
 import '../modern-pages.css';
 
 const MembershipPage = () => {
@@ -36,12 +37,6 @@ const MembershipPage = () => {
     if (selectedLevel === 'All') return customers;
     return customers.filter(c => c.membership === selectedLevel);
   }, [customers, selectedLevel]);
-
-  const membershipBenefits = {
-    Silver: ['Diskon 5%', 'Welcome Drink', 'Late Checkout 12:00'],
-    Gold: ['Diskon 10%', 'Free Breakfast', 'Late Checkout 14:00', 'Room Upgrade'],
-    Platinum: ['Diskon 15%', 'Free Breakfast & Dinner', 'Late Checkout 16:00', 'Room Upgrade', 'Airport Transfer', 'Spa Voucher']
-  };
 
   return (
     <div className="membership-page">
@@ -155,21 +150,23 @@ const MembershipPage = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredCustomers.slice(0, 50).map(customer => (
+              {filteredCustomers.slice(0, 50).map(customer => {
+                const tier = customer.membership || 'None';
+                return (
                 <tr key={customer.id}>
                   <td>{customer.id}</td>
                   <td className="member-name">{customer.name}</td>
                   <td>{customer.email}</td>
-                  <td>{customer.city}</td>
+                  <td>{customer.city || '-'}</td>
                   <td>
-                    <span className={`membership-badge ${customer.membership.toLowerCase()}`}>
-                      {customer.membership === 'Silver' ? '🥈' : customer.membership === 'Gold' ? '🥇' : '💎'}
-                      {customer.membership}
+                    <span className={`membership-badge ${tier.toLowerCase()}`}>
+                      {tier === 'Silver' ? '🥈' : tier === 'Gold' ? '🥇' : tier === 'Platinum' ? '💎' : '🆕'}
+                      {tier}
                     </span>
                   </td>
                   <td>{new Date(customer.joinDate).toLocaleDateString('id-ID')}</td>
                   <td>
-                    <button 
+                    <button
                       className="btn-view-small"
                       onClick={() => navigate(`/customer-detail/${customer.id}`)}
                     >
@@ -177,7 +174,8 @@ const MembershipPage = () => {
                     </button>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
           {filteredCustomers.length > 50 && (

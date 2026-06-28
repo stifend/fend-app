@@ -60,6 +60,7 @@ const UsersPage = () => {
 
     // Ambil data saat halaman pertama kali dibuka
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- disengaja: ambil data awal dari Supabase
         fetchUsers();
     }, [fetchUsers]);
 

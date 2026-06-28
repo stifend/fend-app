@@ -48,6 +48,7 @@ const PaymentsPage = () => {
   // ========================================
   useEffect(() => {
     // Set loading true saat mulai fetch data
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- disengaja: simulasi fetch async
     setIsLoading(true);
 
     // Simulasi fetch data pembayaran dari server (800ms)

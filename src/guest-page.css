@@ -5,14 +5,16 @@
 /* Guest Page Container */
 .guest-page {
   min-height: 100vh;
-  background: #f8fafc;
+  background: #f6f7fb;
+  font-feature-settings: "ss01";
 }
 
 /* Navbar */
 .guest-navbar {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -20,8 +22,8 @@
 }
 
 .guest-navbar.scrolled {
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.1);
 }
 
 .navbar-container {
@@ -42,19 +44,21 @@
 .brand-logo {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
 }
 
 .navbar-brand h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #0f172a;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .navbar-menu {
@@ -81,8 +85,8 @@
 }
 
 .nav-link.active {
-  color: #3b82f6;
-  background: #dbeafe;
+  color: #6366f1;
+  background: #eef2ff;
 }
 
 .nav-btn-login {
@@ -104,19 +108,20 @@
 
 .nav-btn-primary {
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.7rem 1.6rem;
+  border-radius: 10px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
 }
 
 .nav-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.45);
 }
 
 .nav-btn-outline {
@@ -139,7 +144,7 @@
 .hero-section {
   position: relative;
   min-height: 700px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 45%, #7c3aed 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,8 +158,15 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.3) 0%, transparent 50%);
+  background: radial-gradient(circle at 18% 30%, rgba(168, 85, 247, 0.55) 0%, transparent 45%),
+              radial-gradient(circle at 82% 75%, rgba(56, 189, 248, 0.35) 0%, transparent 45%),
+              radial-gradient(circle at 50% 100%, rgba(15, 23, 42, 0.45) 0%, transparent 60%);
+  animation: heroGlow 12s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+  from { transform: scale(1); opacity: 0.85; }
+  to { transform: scale(1.15); opacity: 1; }
 }
 
 .hero-pattern {
@@ -189,15 +201,16 @@
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 3.75rem;
   font-weight: 800;
   margin: 0 0 1.5rem;
-  line-height: 1.15;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
   animation: fadeInUp 0.8s ease;
 }
 
 .gradient-text {
-  background: linear-gradient(to right, #fff, #f0f0f0);
+  background: linear-gradient(120deg, #fde68a 0%, #fbbf24 50%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -280,7 +293,7 @@
 .btn-hero-primary {
   border: none;
   background: #fff;
-  color: #667eea;
+  color: #6d28d9;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
@@ -385,7 +398,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   transform: scaleX(0);
   transition: transform 0.4s ease;
 }
@@ -397,14 +410,14 @@
 .info-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
-  border-color: #667eea;
+  border-color: #6366f1;
 }
 
 .info-icon-wrapper {
   width: 80px;
   height: 80px;
   margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -440,7 +453,7 @@
   display: inline-block;
   padding: 0.5rem 1rem;
   background: #f1f5f9;
-  color: #667eea;
+  color: #6366f1;
   border-radius: 50px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -449,7 +462,7 @@
 /* Testimonials Section */
 .testimonials-section {
   padding: 5rem 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   position: relative;
   overflow: hidden;
 }
@@ -533,7 +546,7 @@
 .author-avatar {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -587,32 +600,56 @@
 
 .room-card-guest {
   background: #fff;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease;
 }
 
 .room-card-guest:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  transform: translateY(-10px);
+  box-shadow: 0 24px 48px rgba(99, 102, 241, 0.18);
 }
 
 .room-card-image {
-  font-size: 5rem;
+  font-size: 4.5rem;
   text-align: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 2.75rem 2rem;
+  position: relative;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15));
+}
+
+/* Warna header berbeda untuk tiap tipe kamar */
+.rooms-grid .room-card-guest:nth-child(1) .room-card-image {
+  background: linear-gradient(135deg, #60a5fa 0%, #6366f1 100%);
+}
+.rooms-grid .room-card-guest:nth-child(2) .room-card-image {
+  background: linear-gradient(135deg, #34d399 0%, #0ea5e9 100%);
+}
+.rooms-grid .room-card-guest:nth-child(3) .room-card-image {
+  background: linear-gradient(135deg, #f472b6 0%, #a855f7 100%);
+}
+.rooms-grid .room-card-guest:nth-child(4) .room-card-image {
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+}
+
+.room-card-guest:hover .room-card-image {
+  font-size: 5rem;
+  transition: font-size 0.35s ease;
 }
 
 .room-card-content {
-  padding: 1.5rem;
+  padding: 1.75rem 1.5rem;
 }
 
 .room-card-content h3 {
   margin: 0 0 0.75rem;
   font-size: 1.5rem;
   color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .room-description {
@@ -626,23 +663,28 @@
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  margin: 1rem 0;
+  margin: 1.25rem 0;
+  padding: 0.9rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
 }
 
 .price-label {
-  font-size: 0.85rem;
-  color: #64748b;
+  font-size: 0.8rem;
+  color: #94a3b8;
 }
 
 .price-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #6366f1;
+  letter-spacing: -0.02em;
 }
 
 .price-period {
   font-size: 0.9rem;
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .room-features {
@@ -653,30 +695,32 @@
 }
 
 .feature-tag {
-  padding: 0.4rem 0.75rem;
-  background: #f1f5f9;
-  color: #475569;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .btn-book {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.9rem;
+  margin-top: 0.5rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.3);
 }
 
 .btn-book:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 10px 26px rgba(99, 102, 241, 0.45);
 }
 
 /* Facilities Grid */
@@ -688,27 +732,42 @@
 
 .facility-card-guest {
   background: #fff;
-  padding: 2rem;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
   text-align: center;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .facility-card-guest:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(99, 102, 241, 0.15);
 }
 
 .facility-icon-large {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  background: linear-gradient(135deg, #eef2ff 0%, #ede9fe 100%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.12);
+  transition: transform 0.3s ease;
+}
+
+.facility-card-guest:hover .facility-icon-large {
+  transform: scale(1.08) rotate(-5deg);
 }
 
 .facility-card-guest h3 {
   margin: 0 0 0.5rem;
   font-size: 1.25rem;
   color: #0f172a;
+  font-weight: 700;
 }
 
 .facility-card-guest p {
@@ -784,7 +843,7 @@
   width: 80px;
   height: 80px;
   margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -834,7 +893,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #6366f1;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
@@ -843,7 +902,7 @@
   width: 100%;
   padding: 1rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
   border-radius: 10px;
   font-size: 1rem;
@@ -875,7 +934,7 @@
 
 .link-register,
 .link-forgot {
-  color: #667eea;
+  color: #6366f1;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
@@ -883,7 +942,7 @@
 
 .link-register:hover,
 .link-forgot:hover {
-  color: #764ba2;
+  color: #8b5cf6;
 }
 
 /* Member Dashboard */
@@ -893,7 +952,7 @@
 }
 
 .member-navbar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -969,7 +1028,7 @@
 }
 
 .tab-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
 }
 
@@ -997,7 +1056,7 @@
 .room-card-member:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(102, 126, 234, 0.15);
-  border-color: #667eea;
+  border-color: #6366f1;
 }
 
 .room-icon-member {
@@ -1029,7 +1088,7 @@
 .price-amount {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #667eea;
+  color: #6366f1;
 }
 
 .price-per {
@@ -1041,7 +1100,7 @@
   width: 100%;
   padding: 0.85rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
   border-radius: 10px;
   font-size: 0.95rem;
@@ -1145,7 +1204,7 @@
 .form-row select:focus,
 .form-row textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #6366f1;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
@@ -1166,7 +1225,7 @@
   width: 100%;
   padding: 1.1rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
   border-radius: 12px;
   font-size: 1.05rem;
@@ -1242,7 +1301,7 @@
 .summary-total .summary-value {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #667eea;
+  color: #6366f1;
 }
 
 .summary-note {
@@ -1250,7 +1309,7 @@
   padding: 1rem;
   background: #f8fafc;
   border-radius: 10px;
-  border-left: 3px solid #667eea;
+  border-left: 3px solid #6366f1;
 }
 
 .summary-note p {
@@ -1306,7 +1365,7 @@
 
 .success-note {
   margin-top: 1.5rem !important;
-  color: #667eea !important;
+  color: #6366f1 !important;
   font-weight: 600;
 }
 
@@ -1362,7 +1421,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1460,7 +1519,7 @@
 .btn-primary-member {
   padding: 1rem 2rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
   border-radius: 10px;
   font-size: 1rem;
@@ -1573,7 +1632,7 @@
 .transaction-row.total .value.price {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #667eea;
+  color: #6366f1;
 }
 
 /* Statistics Grid */
@@ -1685,7 +1744,7 @@
 .activity-amount {
   font-size: 1rem;
   font-weight: 700;
-  color: #667eea;
+  color: #6366f1;
 }
 
 /* Loading Screen */
@@ -1702,7 +1761,7 @@
   width: 50px;
   height: 50px;
   border: 4px solid #e2e8f0;
-  border-top-color: #667eea;
+  border-top-color: #6366f1;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -1719,31 +1778,147 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .navbar-container {
+    padding: 0.75rem 1rem;
+  }
+
   .navbar-menu {
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.35rem;
   }
-  
+
+  .nav-link {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
   .hero-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
-  
+
   .hero-stats {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    padding: 1.5rem;
   }
-  
+
+  .stat-divider {
+    display: none;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .section-title h2,
+  .section-title-white h2,
+  .section-header-center h2 {
+    font-size: 1.9rem;
+  }
+
   .profile-header {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .detail-row {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .detail-label {
     flex: none;
   }
+}
+
+/* ========================================
+   KARTU MEMBERSHIP DI MEMBER DASHBOARD
+   ======================================== */
+.membership-card-member {
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-top: 4px solid #94a3b8;
+}
+.membership-card-member.tier-none { border-top-color: #cbd5e1; }
+.membership-card-member.tier-silver { border-top-color: #94a3b8; }
+.membership-card-member.tier-gold { border-top-color: #f59e0b; }
+.membership-card-member.tier-platinum { border-top-color: #8b5cf6; }
+
+.membership-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.membership-tier-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.membership-tier-icon { font-size: 2.5rem; }
+.membership-tier-label {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+.membership-tier-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.membership-spent { text-align: right; }
+.membership-spent-label {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+.membership-spent-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f766e;
+}
+
+.membership-progress { margin-top: 1.25rem; }
+.membership-progress-text {
+  font-size: 0.9rem;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+.membership-progress-bar {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.membership-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.membership-benefits-member { margin-top: 1.25rem; }
+.membership-benefits-member h4 {
+  font-size: 1rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+.membership-benefits-member ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.4rem;
+}
+.membership-benefits-member li {
+  font-size: 0.9rem;
+  color: #16a34a;
+}
+.membership-empty-note {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: #64748b;
 }

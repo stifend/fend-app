@@ -31,3 +31,6 @@ export { default as MetricCard } from './MetricCard';
 export { default as RoomCard } from './RoomCard';
 export { default as StatusRow } from './StatusRow';
 export { default as FeedbackItem } from './FeedbackItem';
+
+// Error Handling
+export { default as ErrorBoundary } from './ErrorBoundary';

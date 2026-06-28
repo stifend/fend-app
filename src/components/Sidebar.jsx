@@ -26,10 +26,9 @@ const Sidebar = ({ onLogout }) => {
   }))].length;
 
   // Hitung member (customer dengan membership)
-  const memberCount = customers.filter(c => c.membershipLevel && c.membershipLevel !== 'None').length;
+  const memberCount = customers.filter(c => c.membership && c.membership !== 'None').length;
 
   // Hitung total kamar (dari tipe kamar yang ada)
-  const roomTypes = [...new Set(reservations.map(r => r.roomType))];
   const totalRooms = 250; // Total kamar hotel (dummy)
 
   // Hitung feedback (30% dari total reservasi)

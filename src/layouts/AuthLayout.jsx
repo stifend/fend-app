@@ -1,6 +1,3 @@
-// Import gambar logo hotel
-import hotelLogo from '../assets/Hotel.jpg';
-
 // Layout wrapper untuk halaman autentikasi (Login, Register, Forgot Password)
 // Layout ini membagi layar menjadi 2 kolom: Sidebar (kiri) + Form Panel (kanan)
 const AuthLayout = ({ children, title, subtitle }) => {

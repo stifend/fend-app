@@ -23,6 +23,7 @@ import FeedbackPage from './pages/FeedbackPage';
 
 // Import halaman Guest & Member
 import GuestPage from './pages/GuestPage';
+import CrmLanding from './pages/CrmLanding';
 import MemberDashboard from './pages/MemberDashboard';
 import BookingPage from './pages/BookingPage';
 import UsersPage from './pages/UsersPage';
@@ -54,8 +55,11 @@ function App() {
     <Routes>
       {/* ========== ROUTE PUBLIK (Tidak perlu login) ========== */}
 
-      {/* Route Guest Page (Landing Page) */}
+            {/* Route Guest Page (Landing Page) */}
       <Route path="/" element={<GuestPage />} />
+
+      {/* Route CRM Landing Page (halaman pemasaran produk CRM) */}
+      <Route path="/crm" element={<CrmLanding />} />
       
       {/* Route Member Dashboard (dilindungi) */}
       <Route path="/member-dashboard" element={<MemberDashboard />} />

@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { getTierBySpending, getDiscount, TIER_ICONS } from '../utils/membership';
 import '../guest-page.css';
 
 const BookingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { addReservation, customers } = useData();
+  const { addReservation, customers, getMemberSpending, upsertCustomerMembership } = useData();
   
   // Room types dengan harga
   const roomTypes = [
@@ -46,6 +47,7 @@ const BookingPage = () => {
     }
 
     const memberObj = JSON.parse(member);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- disengaja: inisialisasi state dari localStorage
     setMemberData(memberObj);
 
     // Cari customer berdasarkan email
@@ -53,8 +55,16 @@ const BookingPage = () => {
     setCustomer(foundCustomer);
   }, [navigate, customers]);
 
-  // Hitung total harga
-  const calculateTotal = () => {
+  // ========== MEMBERSHIP ==========
+  // Tier member SAAT INI = berdasarkan total pengeluaran sebelum booking ini.
+  // Diskon mengikuti tier saat ini (member baru/None = 0%).
+  const currentTier = memberData
+    ? getTierBySpending(getMemberSpending(memberData.email))
+    : 'None';
+  const discountRate = getDiscount(currentTier);
+
+  // Hitung subtotal harga kamar (harga x malam), sebelum diskon
+  const calculateSubtotal = () => {
     if (!bookingData.checkIn || !bookingData.checkOut) return 0;
 
     const checkIn = new Date(bookingData.checkIn);
@@ -66,6 +76,12 @@ const BookingPage = () => {
     const room = roomTypes.find(r => r.type === bookingData.roomType);
     return room.price * nights;
   };
+
+  // Nominal diskon (Rp) berdasarkan tier member saat ini
+  const calculateDiscount = () => Math.round(calculateSubtotal() * discountRate);
+
+  // Total harga setelah diskon membership
+  const calculateTotal = () => calculateSubtotal() - calculateDiscount();
 
   // Hitung jumlah malam
   const calculateNights = () => {
@@ -125,43 +141,40 @@ const BookingPage = () => {
       return;
     }
 
-    // Generate reservation ID
-    const customerId = customer ? customer.id : `MEMBER${Date.now().toString().slice(-4)}`;
-    const timestamp = Date.now().toString().slice(-6);
-    const reservationId = `${customerId}-RES${timestamp}`;
+        try {
+      // Kirim booking ke server (Supabase RPC create_reservation).
+      // Server menghitung subtotal, diskon, tier, total, lalu upsert customer.
+      await addReservation({
+        name: memberData.name,
+        email: memberData.email,
+        phone: memberData.phone || '-',
+        address: memberData.address || '-',
+        roomType: bookingData.roomType,
+        checkIn: bookingData.checkIn,
+        checkOut: bookingData.checkOut,
+        guests: parseInt(bookingData.guests),
+        specialRequest: bookingData.specialRequest,
+      });
 
-    // Create new reservation object
-    const newReservation = {
-      id: reservationId,
-      name: memberData.name,
-      email: memberData.email,
-      phone: memberData.phone || '-',
-      address: memberData.address || '-',
-      reservation: reservationId,
-      roomType: bookingData.roomType,
-      checkIn: bookingData.checkIn,
-      checkOut: bookingData.checkOut,
-      nights: nights,
-      guests: parseInt(bookingData.guests),
-      specialRequest: bookingData.specialRequest,
-      totalPayment: calculateTotal(),
-      payment: 'Pending', // Default status
-      bookingDate: new Date().toISOString()
-    };
+      // Hitung tier terbaru (setelah booking ini) untuk sinkron ke localStorage
+      // 'member' supaya MemberDashboard langsung menampilkan tier terbaru.
+      const newTier = upsertCustomerMembership(memberData.email);
+      if (newTier) {
+        const updatedMember = { ...memberData, membership: newTier };
+        localStorage.setItem('member', JSON.stringify(updatedMember));
+      }
 
-    // Simulate API call
-    setTimeout(() => {
-      // Add to reservations (via Context)
-      addReservation(newReservation);
-      
       setLoading(false);
       setSuccess(true);
 
-      // Redirect to member dashboard after 2 seconds
+      // Redirect ke member dashboard setelah 2 detik
       setTimeout(() => {
         navigate('/member-dashboard', { state: { tab: 'transactions' } });
       }, 2000);
-    }, 1500);
+    } catch {
+      setError('Gagal membuat reservasi. Silakan coba lagi.');
+      setLoading(false);
+    }
   };
 
   if (!memberData) {
@@ -393,6 +406,34 @@ const BookingPage = () => {
 
               <div className="summary-divider"></div>
 
+              {/* Status membership member saat ini */}
+              <div className="summary-item">
+                <span className="summary-label">Tier Member:</span>
+                <span className="summary-value">
+                  {TIER_ICONS[currentTier]} {currentTier === 'None' ? 'Belum ada' : currentTier}
+                </span>
+              </div>
+
+              {/* Subtotal sebelum diskon */}
+              <div className="summary-item">
+                <span className="summary-label">Subtotal:</span>
+                <span className="summary-value">
+                  Rp {calculateSubtotal().toLocaleString('id-ID')}
+                </span>
+              </div>
+
+              {/* Diskon membership (tampil hanya jika ada) */}
+              {discountRate > 0 && (
+                <div className="summary-item">
+                  <span className="summary-label">
+                    Diskon {currentTier} ({(discountRate * 100).toFixed(0)}%):
+                  </span>
+                  <span className="summary-value" style={{ color: '#16a34a' }}>
+                    − Rp {calculateDiscount().toLocaleString('id-ID')}
+                  </span>
+                </div>
+              )}
+
               <div className="summary-item summary-total">
                 <span className="summary-label">Total Harga:</span>
                 <span className="summary-value">
@@ -402,7 +443,11 @@ const BookingPage = () => {
 
               <div className="summary-note">
                 <p>💡 Status pembayaran: <strong>Pending</strong></p>
-                <p>Anda akan menerima konfirmasi via email</p>
+                {currentTier === 'None' ? (
+                  <p>🎉 Booking pertama Anda akan membuka tier <strong>Silver</strong> (diskon 5% untuk booking berikutnya)!</p>
+                ) : (
+                  <p>Anda menikmati benefit tier <strong>{currentTier}</strong>. Terus menginap untuk naik tier!</p>
+                )}
               </div>
             </div>
           </div>

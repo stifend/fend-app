@@ -1,7 +1,7 @@
 // Import React hooks
 import { useState, useEffect } from "react";
 // Import library React Router untuk navigasi
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 // Import icon dari react-icons
 import { ImSpinner2 } from "react-icons/im"; // Icon loading spinner
 import { BsFillExclamationDiamondFill } from "react-icons/bs"; // Icon error
@@ -15,6 +15,9 @@ import { supabase } from "../../lib/supabase";
 export default function Login({ onLogin }) {
   // Hook untuk navigasi ke halaman lain
   const navigate = useNavigate();
+
+  // Hook untuk membaca state navigasi (returnTo & roomType dari GuestPage)
+  const location = useLocation();
 
   // State untuk kontrol loading (true saat proses login)
   const [loading, setLoading] = useState(false);
@@ -84,12 +87,20 @@ export default function Login({ onLogin }) {
         // ========== MEMBER/USER LOGIN ==========
         // 1. Simpan token member ke localStorage
         localStorage.setItem("memberToken", `member-token-${user.id}`);
-        
+
         // 2. Simpan data member ke localStorage
         localStorage.setItem("member", JSON.stringify(user));
-        
-        // 3. Redirect ke member dashboard
-        navigate("/member-dashboard", { replace: true });
+
+        // 3. Redirect: jika datang dari tombol "Pesan Sekarang" (GuestPage),
+        //    lanjutkan ke halaman booking dengan tipe kamar yang dipilih.
+        //    Jika tidak, ke member dashboard seperti biasa.
+        const returnTo = location.state?.returnTo;
+        const roomType = location.state?.roomType;
+        if (returnTo) {
+          navigate(returnTo, { replace: true, state: { roomType } });
+        } else {
+          navigate("/member-dashboard", { replace: true });
+        }
       }
     } catch {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");

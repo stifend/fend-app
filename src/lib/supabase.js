@@ -14,11 +14,19 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
-// Peringatan kalau konfigurasi belum diisi
+// Validasi konfigurasi - throw error jika tidak lengkap
 if (!supabaseUrl || !supabaseKey) {
-    console.error(
-        'Konfigurasi Supabase belum lengkap. Pastikan VITE_SUPABASE_URL dan VITE_SUPABASE_KEY ada di file .env'
-    );
+    const errorMsg = '⚠️ Konfigurasi Supabase belum lengkap!\n\n' +
+        'Pastikan file .env ada dan berisi:\n' +
+        'VITE_SUPABASE_URL=your_supabase_url\n' +
+        'VITE_SUPABASE_KEY=your_supabase_key\n\n' +
+        'Copy dari .env example dan isi dengan credentials Anda.';
+    
+    console.error(errorMsg);
+    
+    // Throw error untuk menghentikan app jika config tidak valid
+    // Ini lebih baik daripada membiarkan app berjalan dengan Supabase broken
+    throw new Error(errorMsg);
 }
 
 // Buat dan export client Supabase
