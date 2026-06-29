@@ -1,0 +1,639 @@
+/* ========================================
+   PAYMENT & REPORT PAGES - MODERN STYLES
+   Styling untuk PaymentsPage & ReportsPage
+   (semua class ber-suffix -modern)
+   ======================================== */
+
+.modern-page {
+  padding: 2rem;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* ─── Header ─────────────────────────────── */
+.page-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: #fff;
+  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.3);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.header-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-icon { font-size: 2rem; }
+
+.page-header-modern h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.page-header-modern .page-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+}
+
+.header-stats-mini {
+  display: flex;
+  gap: 2rem;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.mini-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.mini-stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ─── Summary Cards ──────────────────────── */
+.payment-summary-grid-modern,
+.revenue-summary-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.payment-card-modern,
+.revenue-card-modern {
+  position: relative;
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.card-glow {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%);
+}
+
+.card-content-modern { position: relative; z-index: 1; }
+
+.card-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.card-icon-modern {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: #eef2ff;
+}
+
+.card-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.card-badge.success { background: #dcfce7; color: #16a34a; }
+.card-badge.warning { background: #fef3c7; color: #d97706; }
+.card-badge.danger  { background: #fee2e2; color: #dc2626; }
+
+.card-label-modern {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+
+.card-value-modern {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.card-footer-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.card-count { color: #94a3b8; }
+
+.card-trend { font-weight: 700; }
+.card-trend.up { color: #16a34a; }
+.card-trend.down { color: #dc2626; }
+
+/* ─── Section Card ───────────────────────── */
+.section-card-modern {
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.section-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title-modern {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #0f172a;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title-icon { font-size: 1.25rem; }
+
+.section-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* ─── Payment Status Cards ───────────────── */
+.payment-status-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.status-card-modern {
+  position: relative;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.status-card-modern.lunas  { background: #f0fdf4; border-color: #bbf7d0; }
+.status-card-modern.pending { background: #fffbeb; border-color: #fde68a; }
+.status-card-modern.unpaid { background: #fef2f2; border-color: #fecaca; }
+
+.status-card-content {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.status-icon-modern { font-size: 1.75rem; flex-shrink: 0; }
+
+.status-info-modern { flex: 1; }
+
+.status-info-modern h4 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.status-count-modern {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.status-amount-modern {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.status-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ─── Progress Bars ──────────────────────── */
+.progress-bar-modern {
+  flex: 1;
+  height: 8px;
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-fill-modern {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  transition: width 0.3s ease;
+}
+
+.progress-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  white-space: nowrap;
+}
+
+/* ─── Filter Buttons ─────────────────────── */
+.filter-buttons-modern {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn-modern:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.filter-btn-modern.active {
+  background: #6366f1;
+  color: #fff;
+  border-color: #6366f1;
+}
+
+.filter-icon { font-size: 0.9rem; }
+
+.filter-count {
+  background: rgba(148, 163, 184, 0.2);
+  padding: 0.1rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+}
+
+.filter-btn-modern.active .filter-count {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Tables ─────────────────────────────── */
+.payments-table-container-modern,
+.transactions-table-container-modern {
+  overflow-x: auto;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.payments-table-modern,
+.transactions-table-modern {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payments-table-modern thead,
+.transactions-table-modern thead {
+  background: #f8fafc;
+}
+
+.payments-table-modern th,
+.transactions-table-modern th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.payments-table-modern td,
+.transactions-table-modern td {
+  padding: 1rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.payments-table-modern tbody tr:hover,
+.transactions-table-modern tbody tr:hover {
+  background: #f8fafc;
+}
+
+.booking-id-modern { font-weight: 700; color: #6366f1; }
+.customer-name-modern { font-weight: 600; color: #0f172a; }
+
+.payment-amount-modern,
+.transaction-amount-modern {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Room type badge */
+.room-type-badge {
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+}
+.room-type-badge.standard  { background: #f1f5f9; color: #64748b; }
+.room-type-badge.deluxe    { background: #dbeafe; color: #2563eb; }
+.room-type-badge.suite     { background: #f3e8ff; color: #8b5cf6; }
+.room-type-badge.executive { background: #fee2e2; color: #dc2626; }
+
+/* Payment / transaction status badge */
+.payment-status-badge-modern,
+.transaction-status-badge-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.payment-status-badge-modern.lunas,
+.transaction-status-badge-modern.lunas {
+  background: #dcfce7; color: #16a34a;
+}
+.payment-status-badge-modern.pending,
+.transaction-status-badge-modern.pending {
+  background: #fef3c7; color: #d97706;
+}
+.payment-status-badge-modern.belum-bayar,
+.transaction-status-badge-modern.belum-bayar {
+  background: #fee2e2; color: #dc2626;
+}
+
+.btn-view-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  background: #6366f1;
+  color: #fff;
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-view-modern:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.btn-arrow { transition: transform 0.2s ease; }
+.btn-view-modern:hover .btn-arrow { transform: translateX(3px); }
+
+.table-footer-modern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.table-footer-modern p { margin: 0; }
+.footer-icon { font-size: 1rem; }
+
+.btn-load-more {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #475569;
+  padding: 0.45rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-load-more:hover { background: #f1f5f9; }
+
+/* ─── Reports: Revenue per Room Type ─────── */
+.room-revenue-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.room-revenue-card-modern {
+  position: relative;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.room-card-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+}
+
+.room-card-content {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.room-icon-modern {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.room-info-modern { flex: 1; }
+
+.room-info-modern h4 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.room-revenue-amount-modern {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.room-revenue-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ─── Reports: Revenue per Month ─────────── */
+.month-revenue-list-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.month-revenue-item-modern {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.month-info { min-width: 120px; }
+
+.month-name-modern {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.month-count-modern {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.month-revenue-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.revenue-bar-bg {
+  flex: 1;
+  height: 12px;
+  background: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.revenue-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  transition: width 0.3s ease;
+}
+
+.month-revenue-modern {
+  min-width: 130px;
+  text-align: right;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ─── Reports: Summary Stats ─────────────── */
+.summary-stats-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.summary-stat-card-modern {
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.stat-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.85rem;
+  background: #eef2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon-modern { font-size: 1.5rem; }
+
+.stat-content-modern { flex: 1; }
+
+.stat-value-modern {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.stat-label-modern {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.2rem;
+}
+
+/* ─── Responsive ─────────────────────────── */
+@media (max-width: 768px) {
+  .modern-page { padding: 1.25rem; }
+  .page-header-modern { flex-direction: column; align-items: flex-start; }
+  .header-stats-mini { gap: 1.5rem; }
+  .mini-stat { align-items: flex-start; }
+  .month-revenue-item-modern { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .month-revenue-bar { width: 100%; }
+  .month-revenue-modern { text-align: left; }
+}

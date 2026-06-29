@@ -1,9 +1,12 @@
 // Import library React Router untuk navigasi
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 // Import gambar profile picture
 import pp from '../assets/pp.jpg';
 // Import custom hook untuk akses data global
 import { useData } from '../context/DataContext';
+// Import koneksi Supabase (untuk jumlah feedback nyata)
+import { supabase } from '../lib/supabase';
 
 const Sidebar = ({ onLogout }) => {
   // Hook untuk navigasi ke halaman lain
@@ -28,11 +31,17 @@ const Sidebar = ({ onLogout }) => {
   // Hitung member (customer dengan membership)
   const memberCount = customers.filter(c => c.membership && c.membership !== 'None').length;
 
-  // Hitung total kamar (dari tipe kamar yang ada)
-  const totalRooms = 250; // Total kamar hotel (dummy)
+    // Total kamar hotel (konfigurasi: 100 Standard + 80 Deluxe + 50 Suite + 20 Executive)
+  const totalRooms = 250;
 
-  // Hitung feedback (30% dari total reservasi)
-  const feedbackCount = Math.floor(reservations.length * 0.3);
+  // Jumlah feedback NYATA dari Supabase (tabel feedback)
+  const [feedbackCount, setFeedbackCount] = useState(0);
+
+  useEffect(() => {
+    supabase.rpc('get_all_feedback').then(({ data, error }) => {
+      if (!error && data) setFeedbackCount(data.length);
+    });
+  }, []);
 
   return (
     <aside className="dashboard-sidebar">
@@ -135,19 +144,7 @@ const Sidebar = ({ onLogout }) => {
           </div>
         </div>
 
-        {/* ========== MENU DATA HOTEL ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/hotel-data')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">🏢 Data Hotel</p>
-            <span className="menu-item-badge">5</span>
-          </div>
-        </div>
-
-        {/* ========== MENU FEEDBACK ========== */}
+                {/* ========== MENU FEEDBACK ========== */}
         <div className="sidebar-menu-item">
           <div
             className="menu-item-header"

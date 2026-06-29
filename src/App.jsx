@@ -17,7 +17,6 @@ import CustomerDetail from './pages/CustomerDetail';
 import PaymentsPage from './pages/PaymentsPage';
 import ReportsPage from './pages/ReportsPage';
 import MembershipPage from './pages/MembershipPage';
-import HotelDataPage from './pages/HotelDataPage';
 import RoomsPage from './pages/RoomsPage';
 import FeedbackPage from './pages/FeedbackPage';
 
@@ -106,7 +105,8 @@ function App() {
       <Route
         path="/reservations"
         element={
-          isLoggedIn ? (
+          isLoggedIn ?
+           (
             <MainLayout onLogout={handleLogout}>
               <ReservationPage />
             </MainLayout>
@@ -202,21 +202,7 @@ function App() {
         }
       />
 
-      {/* Route Hotel Data: Halaman informasi hotel */}
-      <Route
-        path="/hotel-data"
-        element={
-          isLoggedIn ? (
-            <MainLayout onLogout={handleLogout}>
-              <HotelDataPage />
-            </MainLayout>
-          ) : (
-            <Navigate to="/" replace />
-          )
-        }
-      />
-
-      {/* Route Rooms: Halaman manajemen kamar hotel */}
+            {/* Route Rooms: Halaman manajemen kamar hotel */}
       <Route
         path="/rooms"
         element={

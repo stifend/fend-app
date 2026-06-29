@@ -1,6 +1,7 @@
 // Halaman Laporan Transaksi - Laporan lengkap transaksi hotel
 import { useData } from '../context/DataContext';
 import { useMemo, useState } from 'react';
+import '../payment-report-pages.css';
 
 const ReportsPage = () => {
   const { reservations, customers } = useData();

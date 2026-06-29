@@ -6,6 +6,7 @@ import { useData } from '../context/DataContext';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from '../components';
+import '../payment-report-pages.css';
 
 const PaymentsPage = () => {
   const { reservations } = useData();
