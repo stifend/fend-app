@@ -45,15 +45,11 @@ const Sidebar = ({ onLogout }) => {
 
   return (
     <aside className="dashboard-sidebar">
-      <div>
+      <div className="sidebar-menu-wrapper">
         {/* ========== BRAND / LOGO ========== */}
         <div className="sidebar-brand">
-          <div className="logo-icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="6" fill="#3b82f6" />
-              <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" fill="white" />
-              <path d="M16 8V16M16 16L24 12M16 16L8 12" stroke="#3b82f6" strokeWidth="1.5" />
-            </svg>
+          <div className="logo-icon" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '6px' }}>
+            <img src="/images/hotel-logo.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div>
             <h1 className="sidebar-title">Novotel</h1>

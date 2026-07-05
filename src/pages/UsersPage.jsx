@@ -196,15 +196,15 @@ const UsersPage = () => {
         {
             header: "No",
             key: "id",
-            width: "70px",
+            width: "60px",
             render: (value, row, index) => index + 1,
         },
-        { header: "Nama", key: "name", width: "180px" },
-        { header: "Email", key: "email", width: "220px" },
+        { header: "Nama", key: "name", width: "150px" },
+        { header: "Email", key: "email", width: "200px" },
         {
             header: "Role",
             key: "role",
-            width: "100px",
+            width: "90px",
             render: (value) => (
                 <span
                     style={{
@@ -220,7 +220,18 @@ const UsersPage = () => {
                 </span>
             ),
         },
-        { header: "Telepon", key: "phone", width: "150px" },
+        { 
+            header: "Telepon", 
+            key: "phone", 
+            width: "140px",
+            render: (value) => value || "-"
+        },
+        { 
+            header: "Alamat", 
+            key: "address", 
+            width: "220px",
+            render: (value) => value || "-"
+        },
     ];
 
     // Kolom Aksi hanya muncul untuk admin

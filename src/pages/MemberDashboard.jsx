@@ -82,7 +82,9 @@ const MemberDashboard = () => {
       <nav className="member-navbar">
         <div className="navbar-container">
           <div className="navbar-brand">
-            <div className="brand-logo">🏨</div>
+            <div className="brand-logo">
+              <img src="/images/hotel-logo.jpg" alt="Novotel Logo" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
             <h1>Novotel Member</h1>
           </div>
           <div className="navbar-menu">

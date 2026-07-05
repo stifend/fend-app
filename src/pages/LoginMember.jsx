@@ -1,6 +1,6 @@
 // Halaman Login Member - Untuk customer/tamu hotel
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ImSpinner2 } from "react-icons/im";
 import { BsFillExclamationDiamondFill } from "react-icons/bs";
 import { supabase } from "../lib/supabase";
@@ -8,6 +8,7 @@ import '../guest-page.css';
 
 export default function LoginMember() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [dataForm, setDataForm] = useState({ email: "", password: "" });
@@ -48,7 +49,7 @@ export default function LoginMember() {
 
       const member = data[0];
 
-      // Cek apakah user adalah role 'member' atau 'user'
+      // Cek apakah user adalah role 'member' or 'user'
       if (member.role === 'admin') {
         setError("Akun admin tidak bisa login di halaman member. Silakan login di halaman admin.");
         return;
@@ -58,8 +59,16 @@ export default function LoginMember() {
       localStorage.setItem("memberToken", `member-token-${member.id}`);
       localStorage.setItem("member", JSON.stringify(member));
 
-      // Redirect ke member dashboard
-      navigate("/member-dashboard", { replace: true });
+      // Redirect: jika datang dari tombol "Pesan Sekarang" (GuestPage),
+      // lanjutkan ke halaman booking dengan tipe kamar yang dipilih.
+      // Jika tidak, ke member dashboard seperti biasa.
+      const returnTo = location.state?.returnTo;
+      const roomType = location.state?.roomType;
+      if (returnTo) {
+        navigate(returnTo, { replace: true, state: { roomType } });
+      } else {
+        navigate("/member-dashboard", { replace: true });
+      }
     } catch {
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
     } finally {
@@ -73,7 +82,9 @@ export default function LoginMember() {
       <nav className="guest-navbar">
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <div className="brand-logo">🏨</div>
+            <div className="brand-logo">
+              <img src="/images/hotel-logo.jpg" alt="Novotel Logo" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
             <h1>Novotel Hotel</h1>
           </div>
           <div className="navbar-menu">
@@ -144,10 +155,10 @@ export default function LoginMember() {
           <div className="login-member-footer">
             <p>
               Belum punya akun member? 
-              <a href="/register-member" className="link-register"> Daftar di sini</a>
+              <a href="/register" className="link-register"> Daftar di sini</a>
             </p>
             <p>
-              <a href="/forgot-member" className="link-forgot">Lupa password?</a>
+              <a href="/forgot" className="link-forgot">Lupa password?</a>
             </p>
           </div>
         </div>

@@ -22,10 +22,10 @@ import FeedbackPage from './pages/FeedbackPage';
 
 // Import halaman Guest & Member
 import GuestPage from './pages/GuestPage';
-import CrmLanding from './pages/CrmLanding';
 import MemberDashboard from './pages/MemberDashboard';
 import BookingPage from './pages/BookingPage';
 import UsersPage from './pages/UsersPage';
+import LoginMember from './pages/LoginMember';
 
 // Import layout wrapper untuk halaman dashboard (sidebar + header)
 import MainLayout from './layouts/MainLayout';
@@ -54,17 +54,17 @@ function App() {
     <Routes>
       {/* ========== ROUTE PUBLIK (Tidak perlu login) ========== */}
 
-            {/* Route Guest Page (Landing Page) */}
+      {/* Route Guest Page (Landing Page) */}
       <Route path="/" element={<GuestPage />} />
-
-      {/* Route CRM Landing Page (halaman pemasaran produk CRM) */}
-      <Route path="/crm" element={<CrmLanding />} />
       
       {/* Route Member Dashboard (dilindungi) */}
       <Route path="/member-dashboard" element={<MemberDashboard />} />
 
       {/* Route Booking (dilindungi untuk member) */}
       <Route path="/booking" element={<BookingPage />} />
+
+      {/* Route Login Member */}
+      <Route path="/login-member" element={<LoginMember />} />
 
       {/* Route Login Unified: Jika sudah login redirect sesuai role */}
       <Route

@@ -32,25 +32,29 @@ export const useData = () => {
 export const DataProvider = ({ children }) => {
   const [reservations, setReservations] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   // ========== LOAD DATA DARI SUPABASE ==========
-  // Ambil semua reservasi & customer lewat RPC.
+  // Ambil semua reservasi, customer, & payments lewat RPC.
   const refresh = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const [resRes, custRes] = await Promise.all([
+      const [resRes, custRes, payRes] = await Promise.all([
         supabase.rpc('get_all_reservations'),
         supabase.rpc('get_all_customers'),
+        supabase.rpc('get_all_payments'),
       ]);
 
       if (resRes.error) throw resRes.error;
       if (custRes.error) throw custRes.error;
+      if (payRes.error) throw payRes.error;
 
       setReservations(resRes.data || []);
       setCustomers(custRes.data || []);
+      setPayments(payRes.data || []);
     } catch (err) {
       console.error('Gagal memuat data dari Supabase:', err);
       setError('Gagal memuat data dari server.');
@@ -184,11 +188,56 @@ export const DataProvider = ({ children }) => {
     return getTierBySpending(totalSpent);
   };
 
+  // ========== TAMBAH PAYMENT BARU ==========
+  // Memakai RPC create_payment: server mencatat payment + update status reservasi.
+  const addPayment = async (paymentData) => {
+    const { data, error: rpcError } = await supabase.rpc('create_payment', {
+      p_reservation_id: paymentData.reservationId,
+      p_customer_name: paymentData.customerName,
+      p_customer_email: paymentData.customerEmail,
+      p_amount: Number(paymentData.amount),
+      p_payment_method: paymentData.paymentMethod,
+    });
+
+    if (rpcError) {
+      console.error('Gagal membuat payment:', rpcError);
+      setError('Gagal membuat payment.');
+      throw rpcError;
+    }
+
+    const created = Array.isArray(data) ? data[0] : data;
+
+    // Sinkronkan state lokal
+    if (created) {
+      setPayments(prev => [created, ...prev]);
+      // Refresh reservations untuk update status
+      refresh();
+    }
+
+    return created;
+  };
+
+  // ========== GET MEMBER PAYMENTS ==========
+  // Ambil semua payment milik 1 member berdasarkan email.
+  const getMemberPayments = async (email) => {
+    const { data, error: rpcError } = await supabase.rpc('get_member_payments', {
+      p_email: email,
+    });
+
+    if (rpcError) {
+      console.error('Gagal mengambil payment member:', rpcError);
+      return [];
+    }
+
+    return data || [];
+  };
+
   return (
     <DataContext.Provider
       value={{
         reservations,
         customers,
+        payments,
         loading,
         error,
         refresh,
@@ -197,6 +246,8 @@ export const DataProvider = ({ children }) => {
         updateCustomer,
         addReservation,
         addCustomer,
+        addPayment,
+        getMemberPayments,
         getMemberSpending,
         upsertCustomerMembership,
       }}

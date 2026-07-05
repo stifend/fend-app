@@ -1,4 +1,6 @@
-// Halaman Guest - Landing Page untuk pengunjung yang belum login
+// Halaman Guest Portal - Landing Page Hotel Bintang 5
+// Desain: Profesional, Mewah, Bersih, dan Modern
+// Warna: Putih/Krem + Navy + Emas
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import '../guest-page.css';
@@ -16,6 +18,11 @@ const GuestPage = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Scroll to top saat ganti tab
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
 
   // Data dummy untuk room types
   const roomTypes = [
@@ -51,21 +58,23 @@ const GuestPage = () => {
 
   // Data fasilitas hotel
   const facilities = [
-    { icon: '🏊', name: 'Swimming Pool', desc: 'Kolam renang outdoor 24 jam' },
-    { icon: '🍽️', name: 'Restaurant', desc: '3 restoran dengan berbagai menu' },
-    { icon: '💪', name: 'Fitness Center', desc: 'Gym dengan peralatan modern' },
-    { icon: '🧖', name: 'Spa & Wellness', desc: 'Spa dan pusat kesehatan' },
-    { icon: '🅿️', name: 'Free Parking', desc: 'Parkir gratis 300 kendaraan' },
-    { icon: '📶', name: 'Free WiFi', desc: 'WiFi berkecepatan tinggi' }
+    { icon: '🏊', name: 'Swimming Pool', desc: 'Kolam renang outdoor infinity dengan pemandangan spektakuler' },
+    { icon: '🍽️', name: 'Restaurant', desc: '3 restoran fine dining dengan chef internasional berpengalaman' },
+    { icon: '💪', name: 'Fitness Center', desc: 'Gym 24 jam dengan peralatan modern dan personal trainer' },
+    { icon: '🧖', name: 'Spa & Wellness', desc: 'Spa premium dengan terapi tradisional dan modern' },
+    { icon: '🅿️', name: 'Valet Parking', desc: 'Layanan valet parking dan area parkir luas 300 kendaraan' },
+    { icon: '📶', name: 'High-Speed WiFi', desc: 'Koneksi WiFi fiber optic berkecepatan tinggi di seluruh area' }
   ];
 
   return (
     <div className="guest-page">
-      {/* Navbar */}
+      {/* ═══ Navbar ═══ */}
       <nav className={`guest-navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="navbar-container">
           <div className="navbar-brand">
-            <div className="brand-logo">🏨</div>
+            <div className="brand-logo">
+              <img src="/images/hotel-logo.jpg" alt="Novotel Logo" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
             <h1>Novotel Hotel</h1>
           </div>
           <div className="navbar-menu">
@@ -73,7 +82,7 @@ const GuestPage = () => {
               className={`nav-link ${activeTab === 'home' ? 'active' : ''}`}
               onClick={() => setActiveTab('home')}
             >
-              Home
+              Beranda
             </button>
             <button 
               className={`nav-link ${activeTab === 'rooms' ? 'active' : ''}`}
@@ -88,34 +97,44 @@ const GuestPage = () => {
               Fasilitas
             </button>
             <button 
+              className="nav-btn-outline"
+              onClick={() => navigate('/login-member')}
+              style={{ marginRight: '8px' }}
+            >
+              Login Member
+            </button>
+            <button 
               className="nav-btn-primary"
               onClick={() => navigate('/login')}
             >
-              Login
+              Login Admin
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* ═══ HOME TAB ═══ */}
       {activeTab === 'home' && (
         <>
+          {/* Hero Section dengan Background Image */}
           <section className="hero-section">
+            <div className="hero-bg-image"></div>
             <div className="hero-overlay"></div>
             <div className="hero-pattern"></div>
             <div className="hero-content">
-              <div className="hero-badge">✨ Hotel Bintang 5 Terbaik di Jakarta</div>
+              <div className="hero-badge">✦ Hotel Bintang 5 Terbaik di Jakarta</div>
               <h1 className="hero-title">
-                Pengalaman Menginap <span className="gradient-text">Tak Terlupakan</span>
+                Selamat Datang di{' '}
+                <span className="gradient-text">Novotel Hotel</span>
               </h1>
               <p className="hero-subtitle">
-                Nikmati kemewahan, kenyamanan, dan pelayanan kelas dunia di jantung kota Jakarta.<br/>
-                Dilengkapi fasilitas modern dan pemandangan spektakuler.
+                Rasakan keanggunan dan kemewahan sejati di jantung kota Jakarta.<br/>
+                Pelayanan kelas dunia, fasilitas premium, dan pengalaman tak terlupakan menanti Anda.
               </p>
               <div className="hero-stats">
                 <div className="stat-item">
                   <div className="stat-icon-box">🏨</div>
-                  <div className="stat-value">250</div>
+                  <div className="stat-value">250+</div>
                   <div className="stat-label">Kamar Premium</div>
                 </div>
                 <div className="stat-divider"></div>
@@ -147,77 +166,92 @@ const GuestPage = () => {
                 </button>
                 <button 
                   className="btn-hero-secondary"
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate('/login-member')}
                 >
                   <span>👤</span>
-                  Login
+                  Login Member
+                </button>
+                <button 
+                  className="btn-hero-secondary"
+                  onClick={() => navigate('/login')}
+                  style={{ border: '1px solid rgba(198,163,85,0.3)' }}
+                >
+                  <span>🔑</span>
+                  Login Admin
                 </button>
               </div>
               <div className="hero-features">
                 <div className="feature-chip">✓ Check-in 24 Jam</div>
                 <div className="feature-chip">✓ Free WiFi</div>
-                <div className="feature-chip">✓ Parkir Gratis</div>
+                <div className="feature-chip">✓ Valet Parking</div>
                 <div className="feature-chip">✓ Breakfast Included</div>
               </div>
             </div>
           </section>
 
-          {/* Quick Info */}
+          {/* ═══ Quick Info - Menu Grid Layanan ═══ */}
           <section className="quick-info-section">
             <div className="container">
               <div className="section-title">
-                <h2>Mengapa Memilih Kami?</h2>
-                <p>Pengalaman menginap terbaik dengan berbagai keunggulan</p>
+                <h2>Layanan Tamu Kami</h2>
+                <p>Nikmati berbagai layanan premium yang kami sediakan untuk kenyamanan Anda</p>
               </div>
               <div className="info-grid">
+                {/* Layanan Kamar */}
                 <div className="info-card">
                   <div className="info-icon-wrapper">
-                    <div className="info-icon">📍</div>
+                    <div className="info-icon">🛎️</div>
                   </div>
-                  <h3>Lokasi Strategis</h3>
-                  <p>Terletak di Jl. Sudirman, pusat bisnis Jakarta dengan akses mudah ke berbagai destinasi</p>
-                  <div className="info-stats">15 menit ke Bandara</div>
+                  <h3>Layanan Kamar</h3>
+                  <p>Room service 24 jam dengan menu pilihan dari chef kami. Pesan makanan, minuman, atau keperluan lainnya langsung ke kamar Anda.</p>
+                  <div className="info-stats">24/7 Available</div>
                 </div>
+
+                {/* Info Wi-Fi */}
                 <div className="info-card">
                   <div className="info-icon-wrapper">
-                    <div className="info-icon">🕐</div>
+                    <div className="info-icon">📶</div>
                   </div>
-                  <h3>Layanan 24/7</h3>
-                  <p>Tim front desk profesional siap melayani Anda kapan saja dengan ramah dan responsif</p>
-                  <div className="info-stats">Always Available</div>
+                  <h3>Info Wi-Fi</h3>
+                  <p>Koneksi WiFi fiber optic berkecepatan tinggi tersedia di seluruh area hotel. Gratis untuk semua tamu tanpa batas.</p>
+                  <div className="info-stats">Up to 500 Mbps</div>
                 </div>
+
+                {/* Fasilitas Spa & Gym */}
                 <div className="info-card">
                   <div className="info-icon-wrapper">
-                    <div className="info-icon">✨</div>
+                    <div className="info-icon">🧖</div>
                   </div>
-                  <h3>Member Eksklusif</h3>
-                  <p>Dapatkan benefit spesial, diskon hingga 15%, dan rewards point setiap pemesanan</p>
-                  <div className="info-stats">Save up to 15%</div>
+                  <h3>Spa & Gym</h3>
+                  <p>Pusat kebugaran modern dan spa premium dengan terapi tradisional Bali. Relaksasi tubuh dan pikiran Anda.</p>
+                  <div className="info-stats">Open 06:00 - 22:00</div>
                 </div>
+
+                {/* Panduan Wisata */}
                 <div className="info-card">
                   <div className="info-icon-wrapper">
-                    <div className="info-icon">🍽️</div>
+                    <div className="info-icon">🗺️</div>
                   </div>
-                  <h3>Kuliner Premium</h3>
-                  <p>3 restoran dengan chef berpengalaman menyajikan masakan lokal dan internasional</p>
-                  <div className="info-stats">Michelin Rated</div>
+                  <h3>Panduan Wisata</h3>
+                  <p>Tim concierge kami siap membantu merencanakan wisata terbaik di Jakarta. Tur kota, kuliner, dan budaya tersedia.</p>
+                  <div className="info-stats">10+ Destinations</div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Testimonials Section */}
+          {/* ═══ Testimonials ═══ */}
           <section className="testimonials-section">
             <div className="container">
               <div className="section-title-white">
                 <h2>Kata Mereka Tentang Kami</h2>
-                <p>Testimoni nyata dari para tamu yang puas</p>
+                <p>Testimoni nyata dari para tamu yang puas dengan layanan kami</p>
               </div>
               <div className="testimonials-grid">
                 <div className="testimonial-card">
-                  <div className="stars">⭐⭐⭐⭐⭐</div>
+                  <div className="stars">★ ★ ★ ★ ★</div>
                   <p className="testimonial-text">
-                    "Pengalaman menginap yang luar biasa! Kamar sangat bersih, pelayanan ramah, dan lokasi strategis."
+                    "Pengalaman menginap yang luar biasa! Kamar sangat bersih dengan pemandangan kota yang memukau, pelayanan ramah dan profesional."
                   </p>
                   <div className="testimonial-author">
                     <div className="author-avatar">BW</div>
@@ -228,9 +262,9 @@ const GuestPage = () => {
                   </div>
                 </div>
                 <div className="testimonial-card">
-                  <div className="stars">⭐⭐⭐⭐⭐</div>
+                  <div className="stars">★ ★ ★ ★ ★</div>
                   <p className="testimonial-text">
-                    "Sangat merekomendasikan! Fasilitas lengkap, makanan enak, dan view kamar yang menakjubkan."
+                    "Sangat merekomendasikan! Fasilitas spa-nya luar biasa, makanan restoran sangat enak, dan view kamar yang menakjubkan."
                   </p>
                   <div className="testimonial-author">
                     <div className="author-avatar">SP</div>
@@ -241,9 +275,9 @@ const GuestPage = () => {
                   </div>
                 </div>
                 <div className="testimonial-card">
-                  <div className="stars">⭐⭐⭐⭐⭐</div>
+                  <div className="stars">★ ★ ★ ★ ★</div>
                   <p className="testimonial-text">
-                    "Hotel terbaik di Jakarta! Staff profesional, kamar luas dan nyaman. Pasti akan kembali lagi."
+                    "Hotel terbaik di Jakarta! Staff yang profesional dan penuh perhatian, kamar luas dan nyaman. Pasti akan kembali lagi."
                   </p>
                   <div className="testimonial-author">
                     <div className="author-avatar">AF</div>
@@ -259,13 +293,13 @@ const GuestPage = () => {
         </>
       )}
 
-      {/* Rooms Section */}
+      {/* ═══ ROOMS TAB ═══ */}
       {activeTab === 'rooms' && (
         <section className="rooms-section">
           <div className="container">
             <div className="section-header-center">
               <h2>Tipe Kamar Kami</h2>
-              <p>Pilih kamar yang sesuai dengan kebutuhan Anda</p>
+              <p>Pilih kamar yang sesuai dengan kebutuhan dan preferensi Anda</p>
             </div>
             <div className="rooms-grid">
               {roomTypes.map((room, index) => (
@@ -293,8 +327,8 @@ const GuestPage = () => {
                           // Jika sudah login, redirect ke booking dengan room type
                           navigate('/booking', { state: { roomType: room.type } });
                         } else {
-                          // Jika belum login, redirect ke login
-                          navigate('/login', { state: { returnTo: '/booking', roomType: room.type } });
+                          // Jika belum login, redirect ke login member
+                          navigate('/login-member', { state: { returnTo: '/booking', roomType: room.type } });
                         }
                       }}
                     >
@@ -308,13 +342,13 @@ const GuestPage = () => {
         </section>
       )}
 
-      {/* Facilities Section */}
+      {/* ═══ FACILITIES TAB ═══ */}
       {activeTab === 'facilities' && (
         <section className="facilities-section">
           <div className="container">
             <div className="section-header-center">
               <h2>Fasilitas Hotel</h2>
-              <p>Nikmati berbagai fasilitas premium kami</p>
+              <p>Nikmati berbagai fasilitas premium kelas dunia kami</p>
             </div>
             <div className="facilities-grid">
               {facilities.map((facility, index) => (
@@ -329,27 +363,29 @@ const GuestPage = () => {
         </section>
       )}
 
-      {/* Footer */}
+      {/* ═══ Footer ═══ */}
       <footer className="guest-footer">
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
               <h3>Novotel Hotel</h3>
-              <p>Hotel bintang 5 dengan pelayanan terbaik di Jakarta</p>
+              <p>Hotel bintang 5 dengan pelayanan terbaik dan fasilitas kelas dunia di Jakarta. Pengalaman menginap mewah yang tak terlupakan.</p>
             </div>
             <div className="footer-section">
               <h4>Kontak</h4>
               <p>📞 +62 21 1234 5678</p>
               <p>✉️ info@novotelhotel.com</p>
+              <p>🌐 www.novotelhotel.com</p>
             </div>
             <div className="footer-section">
               <h4>Alamat</h4>
               <p>Jl. Sudirman No. 123</p>
               <p>Jakarta Pusat 10220</p>
+              <p>Indonesia</p>
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2026 Novotel Hotel. All rights reserved.</p>
+            <p>&copy; 2026 Novotel Hotel. All rights reserved. | Luxury & Elegance Since 2010</p>
           </div>
         </div>
       </footer>

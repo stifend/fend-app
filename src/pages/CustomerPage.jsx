@@ -23,16 +23,22 @@ const CustomerPage = () => {
     { 
       header: 'No', 
       key: 'id',
-      width: '80px',
+      width: '60px',
       render: (value, row, index) => index + 1
     },
-    { header: 'Nama', key: 'name', width: '200px' },
-    { header: 'Email', key: 'email', width: '250px' },
-    { header: 'Telepon', key: 'phone', width: '180px' },
+    { header: 'Nama', key: 'name', width: '180px' },
+    { header: 'Email', key: 'email', width: '220px' },
+    { header: 'Telepon', key: 'phone', width: '150px' },
+    { 
+      header: 'Alamat', 
+      key: 'address', 
+      width: '250px',
+      render: (value) => value || '-'
+    },
     {
       header: 'Aksi',
       key: 'id',
-      width: '150px',
+      width: '120px',
       render: (value, row) => (
         /* 🔵 COMPONENT: Button */
         <Button 

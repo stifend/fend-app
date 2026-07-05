@@ -9,6 +9,8 @@ import { BsFillExclamationDiamondFill } from "react-icons/bs"; // Icon error
 import AuthLayout from "../../layouts/AuthLayout";
 // Import koneksi Supabase
 import { supabase } from "../../lib/supabase";
+// Import CSS untuk styling halaman auth
+import "./modern-login.css";
 
 // Halaman Login: Form login yang divalidasi langsung ke database Supabase
 // Props: onLogin = fungsi callback dari App.jsx untuk set status login

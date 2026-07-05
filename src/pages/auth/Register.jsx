@@ -9,6 +9,8 @@ import { BsFillExclamationDiamondFill, BsCheckCircleFill } from "react-icons/bs"
 import AuthLayout from "../../layouts/AuthLayout";
 // Import koneksi Supabase
 import { supabase } from "../../lib/supabase";
+// Import CSS untuk styling halaman auth
+import "./modern-login.css";
 
 // Halaman Register: Form pendaftaran akun baru ke database Supabase
 // Setelah berhasil, user bisa langsung login dengan akun yang baru dibuat
@@ -31,6 +33,8 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    phone: "",
+    address: "",
   });
 
   // Fungsi untuk handle perubahan input form
@@ -65,6 +69,8 @@ export default function Register() {
         p_name: dataForm.name,
         p_email: dataForm.email,
         p_password: dataForm.password,
+        p_phone: dataForm.phone || null,
+        p_address: dataForm.address || null,
       });
 
       // Jika ada error (misal email sudah terdaftar)
@@ -154,7 +160,35 @@ export default function Register() {
           />
         </div>
 
-        {/* Field 3: Password */}
+        {/* Field 3: No HP */}
+        <div className="form-row">
+          <label htmlFor="phone">No HP (Opsional)</label>
+          <input
+            id="phone"
+            type="tel"
+            name="phone"
+            placeholder="+62 812-xxxx-xxxx"
+            value={dataForm.phone}
+            onChange={handleChange}
+            autoComplete="tel"
+          />
+        </div>
+
+        {/* Field 4: Alamat */}
+        <div className="form-row">
+          <label htmlFor="address">Alamat (Opsional)</label>
+          <textarea
+            id="address"
+            name="address"
+            placeholder="Alamat lengkap Anda"
+            value={dataForm.address}
+            onChange={handleChange}
+            rows="3"
+            autoComplete="street-address"
+          />
+        </div>
+
+        {/* Field 5: Password */}
         <div className="form-row">
           <label htmlFor="password">Password</label>
           <input
@@ -169,7 +203,7 @@ export default function Register() {
           />
         </div>
 
-        {/* Field 4: Confirm Password */}
+        {/* Field 6: Confirm Password */}
         <div className="form-row">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input

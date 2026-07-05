@@ -143,7 +143,8 @@ const MembershipPage = () => {
                 <th>ID</th>
                 <th>Nama</th>
                 <th>Email</th>
-                <th>Kota</th>
+                <th>No HP</th>
+                <th>Alamat</th>
                 <th>Membership</th>
                 <th>Bergabung</th>
                 <th>Aksi</th>
@@ -157,7 +158,8 @@ const MembershipPage = () => {
                   <td>{customer.id}</td>
                   <td className="member-name">{customer.name}</td>
                   <td>{customer.email}</td>
-                  <td>{customer.city || '-'}</td>
+                  <td>{customer.phone || '-'}</td>
+                  <td>{customer.address || '-'}</td>
                   <td>
                     <span className={`membership-badge ${tier.toLowerCase()}`}>
                       {tier === 'Silver' ? '🥈' : tier === 'Gold' ? '🥇' : tier === 'Platinum' ? '💎' : '🆕'}

@@ -9,20 +9,9 @@ import { Loading } from '../components';
 import '../payment-report-pages.css';
 
 const PaymentsPage = () => {
-  const { reservations } = useData();
+  const { payments, loading } = useData();
   const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState('All');
-
-  // ========================================
-  // 📌 TUGAS REACT HOOKS - LOKASI 10 (useState)
-  // ========================================
-  // HOOK: useState
-  // FILE: src/pages/PaymentsPage.jsx
-  // LINE: 16-17
-  // FUNGSI: Loading state untuk simulasi fetch payment data
-  // ========================================
-  const [isLoading, setIsLoading] = useState(true);
-  const [paymentData, setPaymentData] = useState([]);
 
   // ========================================
   // 📌 TUGAS REACT HOOKS - LOKASI 4 (useRef)
@@ -34,33 +23,6 @@ const PaymentsPage = () => {
   // MENGAPA useRef: Butuh store value yang persist tanpa trigger re-render
   // ========================================
   const previousStatusRef = useRef('All');
-
-  // ========================================
-  // 📌 TUGAS REACT HOOKS - LOKASI 5 (useEffect)
-  // ========================================
-  // HOOK: useEffect
-  // FILE: src/pages/PaymentsPage.jsx
-  // LINE: 34-47
-  // FUNGSI: Simulasi fetch payment data dengan loading 800ms
-  // DEPENDENCY: [reservations]
-  // KAPAN JALAN: Saat component mount & saat reservations berubah
-  // PENJELASAN: Effect ini mensimulasikan proses fetch data payment
-  //             dari API/database dengan delay 800ms
-  // ========================================
-  useEffect(() => {
-    // Set loading true saat mulai fetch data
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- disengaja: simulasi fetch async
-    setIsLoading(true);
-
-    // Simulasi fetch data pembayaran dari server (800ms)
-    const fetchTimer = setTimeout(() => {
-      setPaymentData(reservations); // Set data setelah "fetch"
-      setIsLoading(false);           // Matikan loading
-    }, 800); // Delay 800ms (lebih cepat karena data finansial)
-
-    // Cleanup: hapus timer jika component unmount sebelum selesai
-    return () => clearTimeout(fetchTimer);
-  }, [reservations]); // Re-run jika reservations data berubah
 
   // ========================================
   // 📌 TUGAS REACT HOOKS - LOKASI 9 (useEffect + useRef)
@@ -82,37 +44,38 @@ const PaymentsPage = () => {
     }
   }, [selectedStatus]); // Dependency: jalan setiap selectedStatus berubah
 
-  // Hitung statistik pembayaran
+  // Hitung statistik pembayaran dari data payments Supabase
   const paymentStats = useMemo(() => {
     const stats = {
-      Lunas: { count: 0, total: 0 },
+      Success: { count: 0, total: 0 },
       Pending: { count: 0, total: 0 },
-      'Belum Bayar': { count: 0, total: 0 }
+      Failed: { count: 0, total: 0 },
+      Refunded: { count: 0, total: 0 },
     };
 
-    paymentData.forEach(res => {
-      if (stats[res.payment]) {
-        stats[res.payment].count++;
-        stats[res.payment].total += res.totalPayment;
+    payments.forEach(pay => {
+      if (stats[pay.paymentStatus]) {
+        stats[pay.paymentStatus].count++;
+        stats[pay.paymentStatus].total += Number(pay.amount || 0);
       }
     });
 
     return stats;
-  }, [paymentData]);
+  }, [payments]);
 
   const totalRevenue = Object.values(paymentStats).reduce((sum, stat) => sum + stat.total, 0);
-  const totalTransactions = paymentData.length;
-  const paidRevenue = paymentStats.Lunas.total;
-  const pendingRevenue = paymentStats.Pending.total + paymentStats['Belum Bayar'].total;
+  const totalTransactions = payments.length;
+  const successRevenue = paymentStats.Success.total;
+  const pendingRevenue = paymentStats.Pending.total + paymentStats.Failed.total;
 
-  // Filter reservations berdasarkan status
-  const filteredReservations = useMemo(() => {
-    if (selectedStatus === 'All') return paymentData;
-    return paymentData.filter(r => r.payment === selectedStatus);
-  }, [paymentData, selectedStatus]);
+  // Filter payments berdasarkan status
+  const filteredPayments = useMemo(() => {
+    if (selectedStatus === 'All') return payments;
+    return payments.filter(p => p.paymentStatus === selectedStatus);
+  }, [payments, selectedStatus]);
 
   // Tampilkan Loading component jika sedang fetch data
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="payments-page modern-page">
         <div className="page-header-modern">
@@ -151,7 +114,7 @@ const PaymentsPage = () => {
             <span className="mini-stat-label">Total Transaksi</span>
           </div>
           <div className="mini-stat">
-            <span className="mini-stat-value">{((paymentStats.Lunas.count / totalTransactions) * 100).toFixed(0)}%</span>
+            <span className="mini-stat-value">{totalTransactions > 0 ? ((paymentStats.Success.count / totalTransactions) * 100).toFixed(0) : 0}%</span>
             <span className="mini-stat-label">Success Rate</span>
           </div>
         </div>
@@ -182,14 +145,14 @@ const PaymentsPage = () => {
           <div className="card-content-modern">
             <div className="card-header-modern">
               <div className="card-icon-modern">✅</div>
-              <span className="card-badge success">Lunas</span>
+              <span className="card-badge success">Success</span>
             </div>
             <div className="card-body-modern">
-              <div className="card-label-modern">Pembayaran Lunas</div>
-              <div className="card-value-modern">Rp {paidRevenue.toLocaleString('id-ID')}</div>
+              <div className="card-label-modern">Pembayaran Sukses</div>
+              <div className="card-value-modern">Rp {successRevenue.toLocaleString('id-ID')}</div>
               <div className="card-footer-modern">
-                <span className="card-count">{paymentStats.Lunas.count} transaksi</span>
-                <span className="card-trend up">↗ {((paymentStats.Lunas.count / totalTransactions) * 100).toFixed(0)}%</span>
+                <span className="card-count">{paymentStats.Success.count} transaksi</span>
+                <span className="card-trend up">↗ {((paymentStats.Success.count / totalTransactions) * 100).toFixed(0)}%</span>
               </div>
             </div>
           </div>
@@ -203,11 +166,11 @@ const PaymentsPage = () => {
               <span className="card-badge warning">Pending</span>
             </div>
             <div className="card-body-modern">
-              <div className="card-label-modern">Pending & Belum Bayar</div>
+              <div className="card-label-modern">Pending & Failed</div>
               <div className="card-value-modern">Rp {pendingRevenue.toLocaleString('id-ID')}</div>
               <div className="card-footer-modern">
-                <span className="card-count">{paymentStats.Pending.count + paymentStats['Belum Bayar'].count} transaksi</span>
-                <span className="card-trend down">↘ {(((paymentStats.Pending.count + paymentStats['Belum Bayar'].count) / totalTransactions) * 100).toFixed(0)}%</span>
+                <span className="card-count">{paymentStats.Pending.count + paymentStats.Failed.count} transaksi</span>
+                <span className="card-trend down">↘ {(((paymentStats.Pending.count + paymentStats.Failed.count) / totalTransactions) * 100).toFixed(0)}%</span>
               </div>
             </div>
           </div>
@@ -229,14 +192,14 @@ const PaymentsPage = () => {
             <div className="status-card-content">
               <div className="status-icon-modern">✅</div>
               <div className="status-info-modern">
-                <h4>Lunas</h4>
-                <div className="status-count-modern">{paymentStats.Lunas.count} transaksi</div>
-                <div className="status-amount-modern">Rp {paymentStats.Lunas.total.toLocaleString('id-ID')}</div>
+                <h4>Success</h4>
+                <div className="status-count-modern">{paymentStats.Success.count} transaksi</div>
+                <div className="status-amount-modern">Rp {paymentStats.Success.total.toLocaleString('id-ID')}</div>
                 <div className="status-progress">
                   <div className="progress-bar-modern">
-                    <div className="progress-fill-modern" style={{ width: `${(paymentStats.Lunas.count / totalTransactions) * 100}%` }}></div>
+                    <div className="progress-fill-modern" style={{ width: `${(paymentStats.Success.count / totalTransactions) * 100}%` }}></div>
                   </div>
-                  <span className="progress-label">{((paymentStats.Lunas.count / totalTransactions) * 100).toFixed(1)}%</span>
+                  <span className="progress-label">{((paymentStats.Success.count / totalTransactions) * 100).toFixed(1)}%</span>
                 </div>
               </div>
             </div>
@@ -265,14 +228,14 @@ const PaymentsPage = () => {
             <div className="status-card-content">
               <div className="status-icon-modern">❌</div>
               <div className="status-info-modern">
-                <h4>Belum Bayar</h4>
-                <div className="status-count-modern">{paymentStats['Belum Bayar'].count} transaksi</div>
-                <div className="status-amount-modern">Rp {paymentStats['Belum Bayar'].total.toLocaleString('id-ID')}</div>
+                <h4>Failed</h4>
+                <div className="status-count-modern">{paymentStats.Failed.count} transaksi</div>
+                <div className="status-amount-modern">Rp {paymentStats.Failed.total.toLocaleString('id-ID')}</div>
                 <div className="status-progress">
                   <div className="progress-bar-modern">
-                    <div className="progress-fill-modern" style={{ width: `${(paymentStats['Belum Bayar'].count / totalTransactions) * 100}%` }}></div>
+                    <div className="progress-fill-modern" style={{ width: `${(paymentStats.Failed.count / totalTransactions) * 100}%` }}></div>
                   </div>
-                  <span className="progress-label">{((paymentStats['Belum Bayar'].count / totalTransactions) * 100).toFixed(1)}%</span>
+                  <span className="progress-label">{((paymentStats.Failed.count / totalTransactions) * 100).toFixed(1)}%</span>
                 </div>
               </div>
             </div>
@@ -293,14 +256,14 @@ const PaymentsPage = () => {
               onClick={() => setSelectedStatus('All')}
             >
               <span className="filter-icon">📊</span>
-              Semua <span className="filter-count">{reservations.length}</span>
+              Semua <span className="filter-count">{payments.length}</span>
             </button>
             <button 
-              className={`filter-btn-modern success ${selectedStatus === 'Lunas' ? 'active' : ''}`}
-              onClick={() => setSelectedStatus('Lunas')}
+              className={`filter-btn-modern success ${selectedStatus === 'Success' ? 'active' : ''}`}
+              onClick={() => setSelectedStatus('Success')}
             >
               <span className="filter-icon">✅</span>
-              Lunas <span className="filter-count">{paymentStats.Lunas.count}</span>
+              Success <span className="filter-count">{paymentStats.Success.count}</span>
             </button>
             <button 
               className={`filter-btn-modern warning ${selectedStatus === 'Pending' ? 'active' : ''}`}
@@ -310,11 +273,11 @@ const PaymentsPage = () => {
               Pending <span className="filter-count">{paymentStats.Pending.count}</span>
             </button>
             <button 
-              className={`filter-btn-modern danger ${selectedStatus === 'Belum Bayar' ? 'active' : ''}`}
-              onClick={() => setSelectedStatus('Belum Bayar')}
+              className={`filter-btn-modern danger ${selectedStatus === 'Failed' ? 'active' : ''}`}
+              onClick={() => setSelectedStatus('Failed')}
             >
               <span className="filter-icon">❌</span>
-              Belum Bayar <span className="filter-count">{paymentStats['Belum Bayar'].count}</span>
+              Failed <span className="filter-count">{paymentStats.Failed.count}</span>
             </button>
           </div>
         </div>
@@ -323,51 +286,45 @@ const PaymentsPage = () => {
           <table className="payments-table-modern">
             <thead>
               <tr>
-                <th>ID Booking</th>
+                <th>ID Payment</th>
+                <th>Booking ID</th>
                 <th>Nama Customer</th>
                 <th>Tipe Kamar</th>
-                <th>Check-in</th>
-                <th>Check-out</th>
-                <th>Total</th>
+                <th>Metode</th>
+                <th>Amount</th>
                 <th>Status</th>
-                <th>Aksi</th>
+                <th>Tanggal</th>
               </tr>
             </thead>
             <tbody>
-              {filteredReservations.slice(0, 50).map((reservation, index) => (
-                <tr key={reservation.id} style={{ animationDelay: `${index * 0.02}s` }}>
-                  <td className="booking-id-modern">{reservation.reservation}</td>
-                  <td className="customer-name-modern">{reservation.name}</td>
+              {filteredPayments.slice(0, 50).map((payment, index) => (
+                <tr key={payment.id} style={{ animationDelay: `${index * 0.02}s` }}>
+                  <td className="booking-id-modern">{payment.id}</td>
+                  <td className="booking-id-modern">{payment.reservationNo || '-'}</td>
+                  <td className="customer-name-modern">{payment.customerName}</td>
                   <td>
-                    <span className={`room-type-badge ${reservation.roomType.toLowerCase()}`}>
-                      {reservation.roomType}
+                    <span className={`room-type-badge ${(payment.roomType || 'standard').toLowerCase()}`}>
+                      {payment.roomType || '-'}
                     </span>
                   </td>
-                  <td>{new Date(reservation.checkIn).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}</td>
-                  <td>{new Date(reservation.checkOut).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}</td>
-                  <td className="payment-amount-modern">Rp {reservation.totalPayment.toLocaleString('id-ID')}</td>
+                  <td>{payment.paymentMethod}</td>
+                  <td className="payment-amount-modern">Rp {Number(payment.amount).toLocaleString('id-ID')}</td>
                   <td>
-                    <span className={`payment-status-badge-modern ${reservation.payment.toLowerCase().replace(' ', '-')}`}>
-                      {reservation.payment === 'Lunas' ? '✓' : reservation.payment === 'Pending' ? '⏳' : '✗'} {reservation.payment}
+                    <span className={`payment-status-badge-modern ${payment.paymentStatus.toLowerCase()}`}>
+                      {payment.paymentStatus === 'Success' ? '✓' : 
+                       payment.paymentStatus === 'Pending' ? '⏳' : 
+                       payment.paymentStatus === 'Failed' ? '✗' : '↩'} {payment.paymentStatus}
                     </span>
                   </td>
-                  <td>
-                    <button 
-                      className="btn-view-modern"
-                      onClick={() => navigate(`/reservation-detail/${reservation.id}`)}
-                    >
-                      <span>Detail</span>
-                      <span className="btn-arrow">→</span>
-                    </button>
-                  </td>
+                  <td>{new Date(payment.paymentDate).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {filteredReservations.length > 50 && (
+          {filteredPayments.length > 50 && (
             <div className="table-footer-modern">
               <span className="footer-icon">📄</span>
-              <p>Menampilkan 50 dari {filteredReservations.length} pembayaran</p>
+              <p>Menampilkan 50 dari {filteredPayments.length} pembayaran</p>
               <button className="btn-load-more">Muat Lebih Banyak</button>
             </div>
           )}

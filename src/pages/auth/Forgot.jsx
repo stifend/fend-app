@@ -6,6 +6,8 @@ import { BsFillExclamationDiamondFill } from "react-icons/bs"; // Icon error
 import { BsCheckCircleFill } from "react-icons/bs"; // Icon sukses
 // Import layout wrapper untuk halaman auth
 import AuthLayout from "../../layouts/AuthLayout";
+// Import CSS untuk styling halaman auth
+import "./modern-login.css";
 
 // Halaman Forgot Password: Form reset password
 // Desain mengikuti halaman Login, hanya berbeda di isi form
