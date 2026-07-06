@@ -325,10 +325,10 @@ const GuestPage = () => {
                         const memberToken = localStorage.getItem('memberToken');
                         if (memberToken) {
                           // Jika sudah login, redirect ke booking dengan room type
-                          navigate('/booking', { state: { roomType: room.type } });
+                          navigate('/booking-kamar', { state: { roomType: room.type } });
                         } else {
                           // Jika belum login, redirect ke login member
-                          navigate('/login-member', { state: { returnTo: '/booking', roomType: room.type } });
+                          navigate('/login-member', { state: { returnTo: '/booking-kamar', roomType: room.type } });
                         }
                       }}
                     >

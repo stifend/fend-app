@@ -91,7 +91,8 @@ export default function Register() {
       setTimeout(() => {
         navigate("/login", { replace: true });
       }, 1500);
-    } catch {
+    } catch (err) {
+      console.error('Register error:', err);
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
     } finally {
       setLoading(false); // Set loading false

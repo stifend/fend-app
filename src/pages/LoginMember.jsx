@@ -69,7 +69,8 @@ export default function LoginMember() {
       } else {
         navigate("/member-dashboard", { replace: true });
       }
-    } catch {
+    } catch (err) {
+      console.error('Login member error:', err);
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
     } finally {
       setLoading(false);

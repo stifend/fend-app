@@ -104,7 +104,8 @@ export default function Login({ onLogin }) {
           navigate("/member-dashboard", { replace: true });
         }
       }
-    } catch {
+    } catch (err) {
+      console.error('Login error:', err);
       setError("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
     } finally {
       setLoading(false); // Set loading false (sembunyikan spinner)

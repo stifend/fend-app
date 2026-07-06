@@ -145,15 +145,15 @@ const BookingPage = () => {
       // Kirim booking ke server (Supabase RPC create_reservation).
       // Server menghitung subtotal, diskon, tier, total, lalu upsert customer.
       await addReservation({
-        name: memberData.name,
         email: memberData.email,
+        name: memberData.name,
         phone: memberData.phone || '-',
         address: memberData.address || '-',
         roomType: bookingData.roomType,
         checkIn: bookingData.checkIn,
         checkOut: bookingData.checkOut,
         guests: parseInt(bookingData.guests),
-        specialRequest: bookingData.specialRequest,
+        specialRequest: bookingData.specialRequest || null,
       });
 
       // Hitung tier terbaru (setelah booking ini) untuk sinkron ke localStorage
@@ -171,8 +171,9 @@ const BookingPage = () => {
       setTimeout(() => {
         navigate('/member-dashboard', { state: { tab: 'transactions' } });
       }, 2000);
-    } catch {
-      setError('Gagal membuat reservasi. Silakan coba lagi.');
+    } catch (err) {
+      console.error('Error membuat reservasi:', err);
+      setError(err.message || 'Gagal membuat reservasi. Silakan coba lagi.');
       setLoading(false);
     }
   };
