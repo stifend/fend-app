@@ -334,6 +334,21 @@ button {
   transform: translateX(4px);
 }
 
+.sidebar-menu-item.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  transform: translateX(4px);
+}
+
+.sidebar-menu-item.active .menu-item-title {
+  color: #ffffff;
+}
+
+.sidebar-menu-item.active .menu-item-badge {
+  background: #ffffff;
+  color: #3b82f6;
+}
+
 .menu-item-header {
   display: flex;
   justify-content: space-between;
@@ -814,15 +829,50 @@ button {
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
 }
 
-.modal-content h3 {
-  margin: 0 0 1rem;
-  font-size: 1.5rem;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #0f172a;
 }
 
-.modal-content p {
-  margin: 0 0 1.5rem;
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
   color: #64748b;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+}
+
+.modal-close-btn:hover {
+  background: #f1f5f9;
+  color: #ef4444;
+}
+
+.modal-body {
+  margin-bottom: 1.5rem;
+}
+
+.modal-body p {
+  color: #64748b;
+  margin: 0 0 1rem 0;
 }
 
 .modal-actions {
@@ -920,6 +970,68 @@ button {
 
 .modal-edit .modal-actions {
   margin-top: 1.5rem;
+}
+
+/* ─── Reusable Input Component Styles ───────────────────── */
+
+.input-component {
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.input-required {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: #ffffff;
+}
+
+.input-field::placeholder {
+  color: #94a3b8;
+}
+
+.input-field.input-disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+.input-field.input-error {
+  border-color: #ef4444;
+}
+
+.input-error-message {
+  display: block;
+  margin-top: 0.5rem;
+  color: #ef4444;
+  font-size: 0.85rem;
 }
 
 /* ─── Auth Layout ─────────────────────────────────────── */

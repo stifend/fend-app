@@ -185,15 +185,16 @@ const ReservationDetail = () => {
             onChange={handleEditChange}
             required
           />
-          <div className="form-row">
-            <label>Alamat</label>
+          <div className="input-component">
+            <label className="input-label">Alamat<span className="input-required">*</span></label>
             <textarea
               name="address"
               value={editForm.address || ''}
               onChange={handleEditChange}
               rows="3"
               required
-              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}
+              className="input-field"
+              style={{ resize: 'vertical' }}
             />
           </div>
           <div className="modal-actions" style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>

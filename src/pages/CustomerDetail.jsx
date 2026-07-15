@@ -98,14 +98,6 @@ const CustomerDetailPage = () => {
             </div>
           </div>
 
-          {/* Section 3: Tanggal Bergabung */}
-          <div className="detail-section">
-            <h4>Tanggal Bergabung</h4>
-            <div className="detail-row">
-              <div className="detail-row-label">Join Date</div>
-              <div className="detail-row-value">{customerData.joinDate}</div>
-            </div>
-          </div>
         </div>
 
         {/* Action Button */}

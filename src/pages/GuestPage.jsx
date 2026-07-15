@@ -3,6 +3,7 @@
 // Warna: Putih/Krem + Navy + Emas
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import '../guest-page.css';
 
 const GuestPage = () => {
@@ -23,6 +24,49 @@ const GuestPage = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
+
+  // Data ulasan dari Supabase
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    supabase.rpc('get_all_feedback').then(({ data, error }) => {
+      if (!error && data) {
+        // Ambil ulasan dengan rating 4 atau 5, urutkan dari yang terbaru, batasi 3
+        const goodFeedbacks = data
+          .filter(f => f.rating >= 4)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 3);
+        
+        if (goodFeedbacks.length > 0) {
+          setTestimonials(goodFeedbacks);
+        }
+      }
+    });
+  }, []);
+
+  // Data dummy fallback jika belum ada ulasan di database
+  const defaultTestimonials = [
+    {
+      rating: 5,
+      message: "Pengalaman menginap yang luar biasa! Kamar sangat bersih dengan pemandangan kota yang memukau, pelayanan ramah dan profesional.",
+      customerName: "Budi Wijaya",
+      type: "Business Traveler"
+    },
+    {
+      rating: 5,
+      message: "Sangat merekomendasikan! Fasilitas spa-nya luar biasa, makanan restoran sangat enak, dan view kamar yang menakjubkan.",
+      customerName: "Sarah Putri",
+      type: "Family Vacation"
+    },
+    {
+      rating: 5,
+      message: "Hotel terbaik di Jakarta! Staff yang profesional dan penuh perhatian, kamar luas dan nyaman. Pasti akan kembali lagi.",
+      customerName: "Ahmad Fauzi",
+      type: "Conference Guest"
+    }
+  ];
+
+  const displayTestimonials = testimonials.length > 0 ? testimonials : defaultTestimonials;
 
   // Data dummy untuk room types
   const roomTypes = [
@@ -248,45 +292,23 @@ const GuestPage = () => {
                 <p>Testimoni nyata dari para tamu yang puas dengan layanan kami</p>
               </div>
               <div className="testimonials-grid">
-                <div className="testimonial-card">
-                  <div className="stars">★ ★ ★ ★ ★</div>
-                  <p className="testimonial-text">
-                    "Pengalaman menginap yang luar biasa! Kamar sangat bersih dengan pemandangan kota yang memukau, pelayanan ramah dan profesional."
-                  </p>
-                  <div className="testimonial-author">
-                    <div className="author-avatar">BW</div>
-                    <div>
-                      <div className="author-name">Budi Wijaya</div>
-                      <div className="author-role">Business Traveler</div>
+                {displayTestimonials.map((testi, idx) => (
+                  <div className="testimonial-card" key={idx}>
+                    <div className="stars">
+                      {'★ '.repeat(testi.rating).trim()}
+                    </div>
+                    <p className="testimonial-text">
+                      "{testi.message}"
+                    </p>
+                    <div className="testimonial-author">
+                      <div className="author-avatar">{testi.customerName.substring(0, 2).toUpperCase()}</div>
+                      <div>
+                        <div className="author-name">{testi.customerName}</div>
+                        <div className="author-role">{testi.type === 'Review' ? 'Tamu Hotel' : testi.type}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="testimonial-card">
-                  <div className="stars">★ ★ ★ ★ ★</div>
-                  <p className="testimonial-text">
-                    "Sangat merekomendasikan! Fasilitas spa-nya luar biasa, makanan restoran sangat enak, dan view kamar yang menakjubkan."
-                  </p>
-                  <div className="testimonial-author">
-                    <div className="author-avatar">SP</div>
-                    <div>
-                      <div className="author-name">Sarah Putri</div>
-                      <div className="author-role">Family Vacation</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="testimonial-card">
-                  <div className="stars">★ ★ ★ ★ ★</div>
-                  <p className="testimonial-text">
-                    "Hotel terbaik di Jakarta! Staff yang profesional dan penuh perhatian, kamar luas dan nyaman. Pasti akan kembali lagi."
-                  </p>
-                  <div className="testimonial-author">
-                    <div className="author-avatar">AF</div>
-                    <div>
-                      <div className="author-name">Ahmad Fauzi</div>
-                      <div className="author-role">Conference Guest</div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </section>

@@ -407,7 +407,9 @@
 }
 
 .payment-status-badge-modern.lunas,
-.transaction-status-badge-modern.lunas {
+.payment-status-badge-modern.success,
+.transaction-status-badge-modern.lunas,
+.transaction-status-badge-modern.success {
   background: #dcfce7; color: #16a34a;
 }
 .payment-status-badge-modern.pending,
@@ -415,7 +417,9 @@
   background: #fef3c7; color: #d97706;
 }
 .payment-status-badge-modern.belum-bayar,
-.transaction-status-badge-modern.belum-bayar {
+.payment-status-badge-modern.failed,
+.transaction-status-badge-modern.belum-bayar,
+.transaction-status-badge-modern.failed {
   background: #fee2e2; color: #dc2626;
 }
 

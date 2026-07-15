@@ -1,5 +1,8 @@
 // Header component untuk dashboard dengan search bar dan profile
 const Header = () => {
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const userName = currentUser.name || 'Admin';
+
   return (
     <header className="dashboard-header-novotel">
       {/* Logo + Brand Name */}
@@ -36,7 +39,7 @@ const Header = () => {
         {/* Profile Picture */}
         <div className="header-profile">
           <img 
-            src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff" 
+            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=3b82f6&color=fff`} 
             alt="Profile" 
             className="header-profile-img"
           />

@@ -21,6 +21,12 @@
 // ========================================
 
 const RoomCard = ({ title, availability, price, badge, onMenuClick }) => {
+  const formattedPrice = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(price);
+
   return (
     <div className="room-card-clean">
       <div className="room-card-header-clean">
@@ -29,7 +35,7 @@ const RoomCard = ({ title, availability, price, badge, onMenuClick }) => {
       </div>
       <h3 className="room-title-clean">{title}</h3>
       <div className="room-availability-clean">{availability}</div>
-      <div className="room-price-clean">$ {price}<span className="price-period">/day</span></div>
+      <div className="room-price-clean">{formattedPrice}<span className="price-period">/malam</span></div>
     </div>
   );
 };

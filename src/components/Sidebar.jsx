@@ -1,5 +1,5 @@
 // Import library React Router untuk navigasi
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 // Import gambar profile picture
 import pp from '../assets/pp.jpg';
@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 const Sidebar = ({ onLogout }) => {
   // Hook untuk navigasi ke halaman lain
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Ambil data reservasi dan customer dari Context API
   const { reservations, customers } = useData();
@@ -56,112 +57,30 @@ const Sidebar = ({ onLogout }) => {
           </div>
         </div>
 
-        {/* ========== MENU DASHBOARD ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/dashboard')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">📊 Dashboard</p>
-            <span className="menu-item-badge">1</span>
+        {/* ========== SIDEBAR MENUS ========== */}
+        {[
+          { path: '/dashboard', icon: '📊', label: 'Dashboard', badge: 1 },
+          { path: '/reservations', icon: '📋', label: 'Reservasi', badge: reservations.length },
+          { path: '/customers', icon: '👥', label: 'Profil Pelanggan', badge: customers.length },
+          { path: '/payments', icon: '💳', label: 'Pembayaran', badge: paidCount },
+          { path: '/reports', icon: '📊', label: 'Laporan', badge: uniqueMonths },
+          { path: '/membership', icon: '⭐', label: 'Membership', badge: memberCount },
+          { path: '/rooms', icon: '🏨', label: 'Kamar', badge: totalRooms },
+          { path: '/feedback', icon: '💬', label: 'Feedback', badge: feedbackCount },
+          { path: '/admin/vouchers', icon: '🎟️', label: 'Kelola Voucher' },
+          { path: '/users', icon: '🔑', label: 'Manajemen User' }
+        ].map((item, index) => (
+          <div key={index} className={`sidebar-menu-item ${location.pathname === item.path ? 'active' : ''}`}>
+            <div
+              className="menu-item-header"
+              onClick={() => navigate(item.path)}
+              style={{ cursor: 'pointer' }}
+            >
+              <p className="menu-item-title">{item.icon} {item.label}</p>
+              {item.badge !== undefined && <span className="menu-item-badge">{item.badge}</span>}
+            </div>
           </div>
-        </div>
-
-        {/* ========== MENU RESERVASI ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/reservations')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">📋 Reservasi</p>
-            <span className="menu-item-badge">{reservations.length}</span>
-          </div>
-        </div>
-
-        {/* ========== MENU PROFIL PELANGGAN ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/customers')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">👥 Profil Pelanggan</p>
-            <span className="menu-item-badge">{customers.length}</span>
-          </div>
-        </div>
-
-        {/* ========== MENU PEMBAYARAN ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/payments')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">💳 Pembayaran</p>
-            <span className="menu-item-badge">{paidCount}</span>
-          </div>
-        </div>
-
-        {/* ========== MENU LAPORAN ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/reports')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">📊 Laporan</p>
-            <span className="menu-item-badge">{uniqueMonths}</span>
-          </div>
-        </div>
-
-        {/* ========== MENU MEMBERSHIP ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/membership')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">⭐ Membership</p>
-            <span className="menu-item-badge">{memberCount}</span>
-          </div>
-        </div>
-
-        {/* ========== MENU KAMAR ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/rooms')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">🏨 Kamar</p>
-            <span className="menu-item-badge">{totalRooms}</span>
-          </div>
-        </div>
-
-                {/* ========== MENU FEEDBACK ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/feedback')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">💬 Feedback</p>
-            <span className="menu-item-badge">{feedbackCount}</span>
-          </div>
-        </div>
-
-        {/* ========== MENU MANAJEMEN USER ========== */}
-        <div className="sidebar-menu-item">
-          <div
-            className="menu-item-header"
-            onClick={() => navigate('/users')}
-            style={{ cursor: 'pointer' }}
-          >
-            <p className="menu-item-title">🔑 Manajemen User</p>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* ========== FOOTER SIDEBAR (Profile + Logout) ========== */}

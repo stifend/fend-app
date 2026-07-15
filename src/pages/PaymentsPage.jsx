@@ -4,13 +4,11 @@
 // Halaman Pembayaran - Statistik dan daftar pembayaran dari reservasi
 import { useData } from '../context/DataContext';
 import { useMemo, useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Loading } from '../components';
 import '../payment-report-pages.css';
 
 const PaymentsPage = () => {
   const { payments, loading } = useData();
-  const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState('All');
 
   // ========================================

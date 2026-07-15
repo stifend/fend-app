@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { getTierBySpending, getDiscount, TIER_ICONS } from '../utils/membership';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import '../guest-page.css';
 
 const BookingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { addReservation, customers, getMemberSpending, upsertCustomerMembership } = useData();
+  const { addReservation, getMemberSpending, upsertCustomerMembership, getMemberVouchers } = useData();
   
   // Room types dengan harga
   const roomTypes = [
@@ -20,7 +22,6 @@ const BookingPage = () => {
 
   // State untuk member data
   const [memberData, setMemberData] = useState(null);
-  const [customer, setCustomer] = useState(null);
 
   // State untuk form booking
   const [bookingData, setBookingData] = useState({
@@ -28,12 +29,24 @@ const BookingPage = () => {
     checkIn: '',
     checkOut: '',
     guests: 1,
-    specialRequest: ''
+    specialRequest: '',
+    memberVoucherId: ''
   });
+
+  const [myVouchers, setMyVouchers] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const handleDateChange = (name, date) => {
+    const dateString = date ? new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0] : '';
+    setBookingData(prev => ({
+      ...prev,
+      [name]: dateString
+    }));
+    setError('');
+  };
 
   // Cek login dan ambil data member
   useEffect(() => {
@@ -50,10 +63,11 @@ const BookingPage = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- disengaja: inisialisasi state dari localStorage
     setMemberData(memberObj);
 
-    // Cari customer berdasarkan email
-    const foundCustomer = customers.find(c => c.email === memberObj.email);
-    setCustomer(foundCustomer);
-  }, [navigate, customers]);
+    // Ambil voucher yang dimiliki member
+    getMemberVouchers(memberObj.email).then(data => {
+      setMyVouchers(data.filter(v => v.status === 'Available'));
+    });
+  }, [navigate]);
 
   // ========== MEMBERSHIP ==========
   // Tier member SAAT INI = berdasarkan total pengeluaran sebelum booking ini.
@@ -81,7 +95,35 @@ const BookingPage = () => {
   const calculateDiscount = () => Math.round(calculateSubtotal() * discountRate);
 
   // Total harga setelah diskon membership
-  const calculateTotal = () => calculateSubtotal() - calculateDiscount();
+  const calculateTotal = () => {
+    let total = calculateSubtotal() - calculateDiscount();
+
+    // Terapkan diskon voucher jika ada
+    if (bookingData.memberVoucherId) {
+      const selectedVoucher = myVouchers.find(mv => mv.id === bookingData.memberVoucherId);
+      if (selectedVoucher) {
+        if (selectedVoucher.vouchers.is_percentage) {
+          total = total * (1 - selectedVoucher.vouchers.discount_amount);
+        } else {
+          total = Math.max(0, total - selectedVoucher.vouchers.discount_amount);
+        }
+      }
+    }
+    return total;
+  };
+
+  const getVoucherDiscountAmount = () => {
+    if (!bookingData.memberVoucherId) return 0;
+    const selectedVoucher = myVouchers.find(mv => mv.id === bookingData.memberVoucherId);
+    if (!selectedVoucher) return 0;
+    
+    let sub = calculateSubtotal() - calculateDiscount();
+    if (selectedVoucher.vouchers.is_percentage) {
+      return sub * selectedVoucher.vouchers.discount_amount;
+    } else {
+      return selectedVoucher.vouchers.discount_amount;
+    }
+  };
 
   // Hitung jumlah malam
   const calculateNights = () => {
@@ -295,25 +337,27 @@ const BookingPage = () => {
                   <div className="form-row-group">
                     <div className="form-row">
                       <label htmlFor="checkIn">Check-in *</label>
-                      <input 
-                        type="date" 
+                      <DatePicker
                         id="checkIn"
-                        name="checkIn"
-                        value={bookingData.checkIn}
-                        onChange={handleChange}
-                        min={new Date().toISOString().split('T')[0]}
+                        selected={bookingData.checkIn ? new Date(bookingData.checkIn) : null}
+                        onChange={(date) => handleDateChange('checkIn', date)}
+                        minDate={new Date()}
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="Pilih tanggal"
+                        className="react-datepicker-input"
                         required
                       />
                     </div>
                     <div className="form-row">
                       <label htmlFor="checkOut">Check-out *</label>
-                      <input 
-                        type="date" 
+                      <DatePicker
                         id="checkOut"
-                        name="checkOut"
-                        value={bookingData.checkOut}
-                        onChange={handleChange}
-                        min={bookingData.checkIn || new Date().toISOString().split('T')[0]}
+                        selected={bookingData.checkOut ? new Date(bookingData.checkOut) : null}
+                        onChange={(date) => handleDateChange('checkOut', date)}
+                        minDate={bookingData.checkIn ? new Date(bookingData.checkIn) : new Date()}
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="Pilih tanggal"
+                        className="react-datepicker-input"
                         required
                       />
                     </div>
@@ -346,6 +390,23 @@ const BookingPage = () => {
                       rows="3"
                       placeholder="Contoh: kamar lantai atas, extra bed, dll."
                     />
+                  </div>
+
+                  <div className="form-row">
+                    <label htmlFor="memberVoucherId">Gunakan Voucher (Opsional)</label>
+                    <select
+                      id="memberVoucherId"
+                      name="memberVoucherId"
+                      value={bookingData.memberVoucherId}
+                      onChange={handleChange}
+                    >
+                      <option value="">-- Pilih Voucher --</option>
+                      {myVouchers.map(mv => (
+                        <option key={mv.id} value={mv.id}>
+                          {mv.vouchers.name} (Kode: {mv.vouchers.code})
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
@@ -433,6 +494,18 @@ const BookingPage = () => {
                   </span>
                   <span className="summary-value" style={{ color: '#16a34a' }}>
                     − Rp {calculateDiscount().toLocaleString('id-ID')}
+                  </span>
+                </div>
+              )}
+
+              {/* Diskon Voucher */}
+              {bookingData.memberVoucherId && getVoucherDiscountAmount() > 0 && (
+                <div className="summary-item">
+                  <span className="summary-label">
+                    Potongan Voucher:
+                  </span>
+                  <span className="summary-value" style={{ color: '#3b82f6' }}>
+                    − Rp {getVoucherDiscountAmount().toLocaleString('id-ID')}
                   </span>
                 </div>
               )}

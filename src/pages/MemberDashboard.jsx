@@ -7,9 +7,20 @@ import '../guest-page.css';
 
 const MemberDashboard = () => {
   const navigate = useNavigate();
-  const { reservations } = useData();
+  const { reservations, submitFeedback, getAvailableVouchers, getMemberVouchers, claimVoucher } = useData();
   const [activeTab, setActiveTab] = useState('profile');
   const [memberData, setMemberData] = useState(null);
+
+  // State untuk voucher
+  const [availableVouchers, setAvailableVouchers] = useState([]);
+  const [myVouchers, setMyVouchers] = useState([]);
+  const [loadingVouchers, setLoadingVouchers] = useState(false);
+
+  // State untuk ulasan
+  const [selectedFeedbackReservation, setSelectedFeedbackReservation] = useState(null);
+  const [rating, setRating] = useState(5);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Ambil data member dari localStorage
   useEffect(() => {
@@ -31,6 +42,55 @@ const MemberDashboard = () => {
     localStorage.removeItem("memberToken");
     localStorage.removeItem("member");
     navigate("/", { replace: true });
+  };
+
+  // Fungsi load vouchers
+  const loadVouchers = async () => {
+    if (!memberData) return;
+    setLoadingVouchers(true);
+    try {
+      const avail = await getAvailableVouchers(memberData.email);
+      const my = await getMemberVouchers(memberData.email);
+      setAvailableVouchers(avail || []);
+      setMyVouchers(my || []);
+    } catch (err) {
+      console.error("Gagal memuat voucher:", err);
+    } finally {
+      setLoadingVouchers(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'voucher' && memberData) {
+      loadVouchers();
+    }
+  }, [activeTab, memberData]);
+
+  const handleClaimVoucher = async (voucherId) => {
+    try {
+      await claimVoucher(memberData.email, voucherId);
+      alert('Voucher berhasil diklaim!');
+      loadVouchers();
+    } catch (err) {
+      alert('Gagal mengklaim voucher.');
+    }
+  };
+
+  // Fungsi kirim ulasan
+  const handleFeedbackSubmit = async () => {
+    if (!feedbackMessage.trim()) return alert('Pesan ulasan tidak boleh kosong');
+    setIsSubmitting(true);
+    try {
+      await submitFeedback(selectedFeedbackReservation.id, memberData.name, memberData.email, rating, feedbackMessage);
+      alert('Terima kasih! Ulasan Anda berhasil dikirim.');
+      setSelectedFeedbackReservation(null);
+      setFeedbackMessage("");
+      setRating(5);
+    } catch (err) {
+      alert('Terjadi kesalahan saat mengirim ulasan. Pastikan Anda telah menjalankan script SQL terbaru.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Filter transaksi berdasarkan email member
@@ -127,6 +187,12 @@ const MemberDashboard = () => {
             >
               📊 Statistik
             </button>
+            <button 
+              className={`tab-btn ${activeTab === 'voucher' ? 'active' : ''}`}
+              onClick={() => setActiveTab('voucher')}
+            >
+              🎟️ Voucher
+            </button>
           </div>
 
           {/* Profile Tab */}
@@ -148,19 +214,6 @@ const MemberDashboard = () => {
                   <div className="detail-row">
                     <span className="detail-label">📧 Email:</span>
                     <span className="detail-value">{memberData.email}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">📅 Bergabung:</span>
-                    <span className="detail-value">
-                      {memberData.created_at 
-                        ? new Date(memberData.created_at).toLocaleDateString('id-ID', {
-                            day: '2-digit',
-                            month: 'long',
-                            year: 'numeric'
-                          })
-                        : '-'
-                      }
-                    </span>
                   </div>
                   <div className="detail-row">
                     <span className="detail-label">📱 Telepon:</span>
@@ -294,8 +347,8 @@ const MemberDashboard = () => {
                           <span className="label">Booking ID:</span>
                           <span className="value">{transaction.reservation}</span>
                         </div>
-                        <span className={`status-badge ${transaction.payment.toLowerCase().replace(' ', '-')}`}>
-                          {transaction.payment}
+                        <span className={`status-badge ${(transaction.payment || 'pending').toLowerCase().replace(' ', '-')}`}>
+                          {transaction.payment || 'Pending'}
                         </span>
                       </div>
                       <div className="transaction-body">
@@ -335,9 +388,24 @@ const MemberDashboard = () => {
                           <span className="icon">💰</span>
                           <span className="label">Total:</span>
                           <span className="value price">
-                            Rp {transaction.totalPayment.toLocaleString('id-ID')}
+                            Rp {(transaction.totalPayment || 0).toLocaleString('id-ID')}
                           </span>
                         </div>
+                        {transaction.payment === 'Lunas' && (
+                          <div className="transaction-action" style={{ marginTop: '15px', borderTop: '1px solid #eee', paddingTop: '15px', textAlign: 'right' }}>
+                            {transaction.has_feedback ? (
+                              <span style={{ color: '#2ecc71', fontWeight: 'bold' }}>✓ Ulasan Terkirim</span>
+                            ) : (
+                              <button 
+                                className="btn-primary-member" 
+                                style={{ padding: '8px 16px', fontSize: '0.9rem' }}
+                                onClick={() => setSelectedFeedbackReservation(transaction)}
+                              >
+                                ⭐ Beri Ulasan
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -383,7 +451,7 @@ const MemberDashboard = () => {
                   <div className="stat-icon">💰</div>
                   <div className="stat-content">
                     <div className="stat-value">
-                      Rp {(memberStats.totalSpent / 1000000).toFixed(1)}M
+                      Rp {memberStats.totalSpent.toLocaleString('id-ID')}
                     </div>
                     <div className="stat-label">Total Pengeluaran</div>
                   </div>
@@ -420,8 +488,121 @@ const MemberDashboard = () => {
               )}
             </div>
           )}
+
+          {/* Voucher Tab */}
+          {activeTab === 'voucher' && (
+            <div className="voucher-section">
+              <div className="section-header-member">
+                <h2>Voucher Saya</h2>
+                <p>Klaim voucher dan gunakan saat melakukan pemesanan</p>
+              </div>
+
+              {loadingVouchers ? (
+                <div className="loading-screen" style={{ height: '200px' }}>
+                  <div className="spinner"></div>
+                  <p>Memuat voucher...</p>
+                </div>
+              ) : (
+                <div className="voucher-container" style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                  {/* Voucher Tersedia */}
+                  <div>
+                    <h3 style={{ marginBottom: '15px', color: '#1f2937' }}>Voucher Tersedia untuk Diklaim</h3>
+                    {availableVouchers.length === 0 ? (
+                      <p style={{ color: '#6b7280' }}>Tidak ada voucher baru saat ini.</p>
+                    ) : (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+                        {availableVouchers.map(v => (
+                          <div key={v.id} style={{ border: '2px dashed #3b82f6', borderRadius: '12px', padding: '20px', background: '#eff6ff' }}>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#1d4ed8', marginBottom: '5px' }}>{v.name}</div>
+                            <div style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '15px' }}>{v.description}</div>
+                            <div style={{ background: '#bfdbfe', display: 'inline-block', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', color: '#1e40af', marginBottom: '15px' }}>Kode: {v.code}</div>
+                            <button 
+                              onClick={() => handleClaimVoucher(v.id)}
+                              style={{ width: '100%', padding: '10px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}
+                              onMouseOver={(e) => e.target.style.background = '#2563eb'}
+                              onMouseOut={(e) => e.target.style.background = '#3b82f6'}
+                            >
+                              Klaim Voucher
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Voucher Saya */}
+                  <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px' }}>
+                    <h3 style={{ marginBottom: '15px', color: '#1f2937' }}>Voucher Saya</h3>
+                    {myVouchers.length === 0 ? (
+                      <p style={{ color: '#6b7280' }}>Anda belum mengklaim voucher apa pun.</p>
+                    ) : (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+                        {myVouchers.map(mv => (
+                          <div key={mv.id} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', background: mv.status === 'Used' ? '#f3f4f6' : 'white', opacity: mv.status === 'Used' ? 0.7 : 1 }}>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#111827', marginBottom: '5px' }}>{mv.vouchers?.name || 'Voucher'}</div>
+                            <div style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '15px' }}>{mv.vouchers?.description || ''}</div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <div style={{ background: '#e5e7eb', display: 'inline-block', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', color: '#374151' }}>Kode: {mv.vouchers?.code || '???'}</div>
+                              <span style={{ fontWeight: 'bold', color: mv.status === 'Used' ? '#9ca3af' : '#10b981' }}>{mv.status === 'Used' ? 'Sudah Digunakan' : 'Tersedia'}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Feedback Modal */}
+      {selectedFeedbackReservation && (
+        <div className="modal-overlay" onClick={() => setSelectedFeedbackReservation(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ background: 'white', padding: '25px', borderRadius: '15px', width: '90%', maxWidth: '400px' }}>
+            <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: 0 }}>Beri Ulasan Pemesanan</h3>
+              <button className="close-button" onClick={() => setSelectedFeedbackReservation(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }}>×</button>
+            </div>
+            <div className="modal-body">
+              <p style={{ margin: '0 0 15px 0' }}>Booking ID: <strong>{selectedFeedbackReservation.reservation}</strong></p>
+              
+              <div className="rating-container" style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>Rating Anda:</p>
+                <div className="stars" style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <span 
+                      key={star} 
+                      onClick={() => setRating(star)}
+                      style={{ cursor: 'pointer', fontSize: '32px', color: rating >= star ? '#FFD700' : '#e2e8f0', transition: 'color 0.2s' }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-group" style={{ marginTop: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Pesan Ulasan:</label>
+                <textarea 
+                  value={feedbackMessage}
+                  onChange={e => setFeedbackMessage(e.target.value)}
+                  placeholder="Ceritakan pengalaman menginap Anda..."
+                  rows="4"
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                />
+              </div>
+            </div>
+            <div className="modal-footer" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button className="btn-secondary-member" onClick={() => setSelectedFeedbackReservation(null)} disabled={isSubmitting} style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', cursor: 'pointer' }}>Batal</button>
+              <button className="btn-primary-member" onClick={handleFeedbackSubmit} disabled={isSubmitting} style={{ padding: '10px 20px' }}>
+                {isSubmitting ? 'Mengirim...' : 'Kirim Ulasan'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

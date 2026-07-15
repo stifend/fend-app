@@ -58,6 +58,7 @@ export default function Login({ onLogin }) {
 
       // Jika ada error dari Supabase
       if (rpcError) {
+        console.error("RPC Error dari Supabase:", rpcError);
         setError("Terjadi kesalahan saat login. Coba lagi.");
         return;
       }

@@ -10,6 +10,7 @@
 //   updateReservationPayment, updateReservation, updateCustomer,
 //   addReservation, addCustomer,
 //   getMemberSpending, upsertCustomerMembership,
+//   submitFeedback,
 //   loading, error, refresh
 // ========================================
 
@@ -50,7 +51,7 @@ export const DataProvider = ({ children }) => {
 
       if (resRes.error) throw resRes.error;
       if (custRes.error) throw custRes.error;
-      if (payRes.error) throw payRes.error;
+      // if (payRes.error) throw payRes.error; // Jangan throw error jika payments tidak ada
 
       setReservations(resRes.data || []);
       setCustomers(custRes.data || []);
@@ -64,7 +65,25 @@ export const DataProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh();
+
+    // Berlangganan (subscribe) ke perubahan data di semua tabel secara real-time
+    const subscription = supabase
+      .channel('custom-all-channel')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public' },
+        (payload) => {
+          console.log('Realtime update received:', payload);
+          refresh(); // Muat ulang data setiap ada perubahan
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, [refresh]);
 
   // ========== UPDATE STATUS PEMBAYARAN ==========
@@ -131,7 +150,10 @@ export const DataProvider = ({ children }) => {
   // tier, lalu upsert customer otomatis. Mengembalikan baris reservasi
   // yang baru dibuat (camelCase) untuk dipakai pemanggil.
   const addReservation = async (booking) => {
-    const { data, error: rpcError } = await supabase.rpc('create_reservation', {
+    // Log parameter untuk debugging
+    console.log('📋 Booking Data:', booking);
+    
+    const params = {
       p_email: booking.email,
       p_name: booking.name,
       p_phone: booking.phone ?? null,
@@ -141,13 +163,35 @@ export const DataProvider = ({ children }) => {
       p_check_out: booking.checkOut,
       p_guests: Number(booking.guests) || 1,
       p_special_request: booking.specialRequest ?? null,
-    });
+      p_member_voucher_id: booking.memberVoucherId ?? null,
+    };
+    
+    console.log('📤 RPC Parameters:', params);
+    console.log('📤 RPC Call URL:', `${supabase.rest.url}/rest/v1/rpc/create_reservation`);
+    
+    const { data, error: rpcError } = await supabase.rpc('create_reservation', params);
 
     if (rpcError) {
-      console.error('Gagal membuat reservasi:', rpcError);
-      setError('Gagal membuat reservasi.');
+      console.error('❌ RPC Error Detail:', rpcError);
+      console.error('Error code:', rpcError.code);
+      console.error('Error message:', rpcError.message);
+      console.error('Error hint:', rpcError.hint);
+      console.error('Error details:', rpcError.details);
+      console.error('Full error object:', JSON.stringify(rpcError, null, 2));
+      
+      // User-friendly error message
+      let errorMessage = 'Gagal membuat reservasi.';
+      if (rpcError.message && rpcError.message.includes('ambiguous')) {
+        errorMessage = '⚠️ Database error: Silakan jalankan SQL fix di Supabase (FIX-RESERVATION-AMBIGUOUS-EMAIL.sql)';
+      } else if (rpcError.message) {
+        errorMessage = `Error: ${rpcError.message}`;
+      }
+      
+      setError(errorMessage);
       throw rpcError;
     }
+
+    console.log('✅ RPC Success! Response:', data);
 
     const created = Array.isArray(data) ? data[0] : data;
 
@@ -232,6 +276,76 @@ export const DataProvider = ({ children }) => {
     return data || [];
   };
 
+  // ========== SUBMIT FEEDBACK ==========
+  const submitFeedback = async (reservationId, customerName, email, rating, message) => {
+    const { data, error: rpcError } = await supabase.rpc('submit_feedback', {
+      p_reservation_id: reservationId,
+      p_customer_name: customerName,
+      p_email: email,
+      p_rating: rating,
+      p_message: message
+    });
+
+    if (rpcError) {
+      console.error('Gagal mengirim ulasan:', rpcError);
+      throw rpcError;
+    }
+    
+    // Refresh reservations to update has_feedback state
+    refresh();
+    return data;
+  };
+  // ========== VOUCHERS ==========
+  const getAvailableVouchers = async (email) => {
+    if (!email) return [];
+    const { data: allVouchers, error: vErr } = await supabase.from('vouchers').select('*');
+    const { data: memberVouchers, error: mvErr } = await supabase.from('member_vouchers').select('voucher_id').eq('email', email);
+    
+    if (vErr || mvErr) return [];
+    
+    const claimedIds = memberVouchers.map(mv => mv.voucher_id);
+    return allVouchers.filter(v => !claimedIds.includes(v.id));
+  };
+
+  const getMemberVouchers = async (email) => {
+    if (!email) return [];
+    const { data, error } = await supabase
+      .from('member_vouchers')
+      .select('*, vouchers(*)')
+      .eq('email', email);
+    if (error) return [];
+    return data;
+  };
+
+  const claimVoucher = async (email, voucherId) => {
+    const { error } = await supabase.from('member_vouchers').insert({
+      email: email,
+      voucher_id: voucherId,
+      status: 'Available'
+    });
+    if (error) throw error;
+  };
+
+  const getAllVouchers = async () => {
+    const { data, error } = await supabase.from('vouchers').select('*').order('created_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching all vouchers:', error);
+      return [];
+    }
+    return data;
+  };
+
+  const addVoucher = async (voucherData) => {
+    const { data, error } = await supabase.from('vouchers').insert([voucherData]).select();
+    if (error) throw error;
+    return data;
+  };
+
+  const deleteVoucher = async (voucherId) => {
+    const { error } = await supabase.from('vouchers').delete().eq('id', voucherId);
+    if (error) throw error;
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -250,6 +364,13 @@ export const DataProvider = ({ children }) => {
         getMemberPayments,
         getMemberSpending,
         upsertCustomerMembership,
+        submitFeedback,
+        getAvailableVouchers,
+        getMemberVouchers,
+        claimVoucher,
+        getAllVouchers,
+        addVoucher,
+        deleteVoucher,
       }}
     >
       {children}

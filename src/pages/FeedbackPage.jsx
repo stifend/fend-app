@@ -17,13 +17,14 @@ const FeedbackPage = () => {
     if (rpcError) {
       console.error('Gagal memuat feedback:', rpcError);
       setError('Gagal memuat data feedback.');
-    } else {
+    } else {                  
       setFeedbackData(data || []);
     }
     setLoading(false);
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchFeedback();
   }, [fetchFeedback]);
 
@@ -98,38 +99,7 @@ const FeedbackPage = () => {
         </div>
       </div>
 
-      {/* Feedback Type Stats */}
-      <div className="section-card">
-        <h3 className="section-title">📈 Kategori Feedback</h3>
-        <div className="feedback-type-grid">
-          <div className="type-card compliment">
-            <div className="type-icon">👍</div>
-            <div className="type-info">
-              <h4>Compliment</h4>
-              <div className="type-count">{feedbackStats.compliment}</div>
-              <div className="type-percentage">{((feedbackStats.compliment / feedbackStats.total) * 100).toFixed(1)}%</div>
-            </div>
-          </div>
-
-          <div className="type-card suggestion">
-            <div className="type-icon">💡</div>
-            <div className="type-info">
-              <h4>Suggestion</h4>
-              <div className="type-count">{feedbackStats.suggestion}</div>
-              <div className="type-percentage">{((feedbackStats.suggestion / feedbackStats.total) * 100).toFixed(1)}%</div>
-            </div>
-          </div>
-
-          <div className="type-card complaint">
-            <div className="type-icon">⚠️</div>
-            <div className="type-info">
-              <h4>Complaint</h4>
-              <div className="type-count">{feedbackStats.complaint}</div>
-              <div className="type-percentage">{((feedbackStats.complaint / feedbackStats.total) * 100).toFixed(1)}%</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Feedback Type Stats Removed */}
 
       {/* Feedback List */}
       <div className="section-card">
@@ -194,9 +164,7 @@ const FeedbackPage = () => {
 
               <div className="feedback-body">
                 <div className="feedback-badges">
-                  <span className={`feedback-type-badge ${feedback.type.toLowerCase()}`}>
-                    {feedback.type}
-                  </span>
+                  {/* Type badge removed */}
                   <span className={`feedback-status-badge ${feedback.status.toLowerCase()}`}>
                     {feedback.status}
                   </span>

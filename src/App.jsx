@@ -19,6 +19,7 @@ import ReportsPage from './pages/ReportsPage';
 import MembershipPage from './pages/MembershipPage';
 import RoomsPage from './pages/RoomsPage';
 import FeedbackPage from './pages/FeedbackPage';
+import VouchersPage from './pages/VouchersPage';
 
 // Import halaman Guest & Member
 import GuestPage from './pages/GuestPage';
@@ -244,7 +245,21 @@ function App() {
         }
       />
 
-      {/* ========== FALLBACK ROUTE ========== */}
+      {/* Route Vouchers: Halaman manajemen voucher */}
+      <Route
+        path="/admin/vouchers"
+        element={
+          isLoggedIn ? (
+            <MainLayout onLogout={handleLogout}>
+              <VouchersPage />
+            </MainLayout>
+          ) : (
+            <Navigate to="/" replace />
+          )
+        }
+      />
+
+      {/* ========== REDIRECT FALLBACK ========== */}
       {/* Jika URL tidak cocok dengan route manapun, redirect ke GuestPage */}
       {/* Semua akses dimulai dari Guest Page terlebih dahulu */}
       <Route path="*" element={<Navigate to="/" replace />} />

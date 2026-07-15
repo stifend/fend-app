@@ -244,23 +244,18 @@ const ReportsPage = () => {
             <span className="title-icon">📋</span>
             Detail Transaksi
           </h3>
-          <div className="filter-buttons-modern">
-            <button 
-              className={`filter-btn-modern ${selectedMonth === 'All' ? 'active' : ''}`}
-              onClick={() => setSelectedMonth('All')}
+          <div className="filter-dropdown-modern">
+            <span className="filter-icon">📅</span>
+            <select 
+              className="select-filter-modern"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
             >
-              <span className="filter-icon">📊</span>
-              Semua Bulan
-            </button>
-            {months.slice(0, 6).map(month => (
-              <button 
-                key={month}
-                className={`filter-btn-modern ${selectedMonth === month ? 'active' : ''}`}
-                onClick={() => setSelectedMonth(month)}
-              >
-                {month}
-              </button>
-            ))}
+              <option value="All">Semua Bulan</option>
+              {months.map(month => (
+                <option key={month} value={month}>{month}</option>
+              ))}
+            </select>
           </div>
         </div>
 
